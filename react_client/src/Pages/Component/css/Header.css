@@ -1,0 +1,15 @@
+.vertical-line {
+  width: 1px;
+  height: 80%;
+  background-color: black;
+  margin-left: 35px;
+}
+
+h3{
+  text-align: center;
+}
+
+.custom-modal-body {
+  width: auto;
+  height: auto;
+}

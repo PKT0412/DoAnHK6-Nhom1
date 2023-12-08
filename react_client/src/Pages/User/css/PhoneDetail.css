@@ -1,0 +1,17 @@
+.DetailedConfiguration {
+    width: 500px;
+}
+
+.large-image {
+    height: 450px;
+}
+
+.slider-image {
+    border: none;
+}
+
+.slider-container .slick-prev:before,
+.slider-container .slick-next:before {
+    font-size: 20px;
+    color: black;
+}
