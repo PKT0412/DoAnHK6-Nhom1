@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Carousel,
   Navbar,
@@ -19,6 +19,11 @@ import Footer from "../Component/Footer";
 import { Link } from "react-router-dom";
 
 const Home = () => {
+  const [slideshows, setSlideshows] = useState([]);
+  useEffect(() => {
+    axiosClient.get(`/SlideShows`).then((res) => setSlideshows(res.data));
+  }, []);
+
   const [phoneModels, setPhoneModels] = useState([]);
   useEffect(() => {
     axiosClient.get(`/PhoneModels`).then((res) => setPhoneModels(res.data));
@@ -29,62 +34,68 @@ const Home = () => {
     axiosClient.get(`/Brands`).then((res) => setBrands(res.data));
   }, []);
 
-  const [selectedPrice, setSelectedPrice] = useState("");
-
+  //Sắp xếp phonemodel theo giá
+  const [selectedPrice, setSelectedPrice] = useState("decrease");
   const handlePriceChange = (event) => {
     setSelectedPrice(event.target.value);
   };
+  // Filter the phoneModels array based on selectedPrice
+  const filteredPhoneModels = useMemo(() => {
+    let filteredModels = [...phoneModels];
+
+    if (selectedPrice === "decrease") {
+      filteredModels.sort((a, b) => b.promotionalPrice - a.promotionalPrice);
+    } else if (selectedPrice === "ascending") {
+      filteredModels.sort((a, b) => a.promotionalPrice - b.promotionalPrice);
+    }
+
+    return filteredModels;
+  }, [phoneModels, selectedPrice]);
+
   return (
     <>
       <Header />
 
-      <Container>
-        <Navbar bg="light" expand="lg">
-          <Navbar.Brand href="/">Tất cả</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-              {brands.map((brand) => (
-                <Nav.Link className="brand-link"
-                  key={brand.id}
-                  href={`/PhoneModelByBrand/${brand.id}`}
-                >
-                  <Image
-                    src={`https://localhost:7217/Image/Brand/${brand.image}`}
-                    alt={brand.name}
-                    className="brand-img"
-                  />
-                </Nav.Link>
-              ))}
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
+      <Container className="body">
+        <Row className="menu">
+          <Navbar bg="light" expand="lg">
+            <Navbar.Brand className="home" href="/">Tất cả</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="mr-auto">
+                {brands.map((brand) => (
+                  <Nav.Link
+                    className="brand-link"
+                    key={brand.id}
+                    href={`/PhoneModelByBrand/${brand.id}`}
+                  >
+                    <Image
+                      className="brand-img"
+                      src={`https://localhost:7217/Image/Brand/${brand.image}`}
+                      alt={brand.name}                    
+                    />
+                  </Nav.Link>
+                ))}
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+        </Row>
 
-        <Carousel>
-          <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjn1mddDlY0lLSkaQ3aQ1yyy9rj0zagcXIHg&usqp=CAU"
-              alt="First slide"
-            />
-          </Carousel.Item>
-          <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjn1mddDlY0lLSkaQ3aQ1yyy9rj0zagcXIHg&usqp=CAU"
-              alt="Second slide"
-            />
-          </Carousel.Item>
-          <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjn1mddDlY0lLSkaQ3aQ1yyy9rj0zagcXIHg&usqp=CAU"
-              alt="Third slide"
-            />
-          </Carousel.Item>
-        </Carousel>
+        <Row className="slideshows">
+          <Carousel interval={3000}>
+            {slideshows.map((slideshow) => (
+              <Carousel.Item key={slideshow.id}>
+                <Image
+                  className="slideshow-img"
+                  src={`https://localhost:7217/Image/SlideShow/${slideshow.path}`}
+                  alt={slideshow.id}
+                />
+              </Carousel.Item>
+            ))}
+          </Carousel>
+        </Row>
 
-        <Row>
+        <Row className="price-filter">
           <Col>
             <Form.Group controlId="priceFilter">
               <Form.Control
@@ -92,18 +103,19 @@ const Home = () => {
                 value={selectedPrice}
                 onChange={handlePriceChange}
                 className="select-filter"
-              >
+              > 
                 <option value="decrease">Giá cao đến thấp</option>
                 <option value="ascending">Giá thấp đến cao</option>
               </Form.Control>
             </Form.Group>
           </Col>
         </Row>
-        <Row>
-          {phoneModels.map((item) => {
+
+        <Row className="phonemodels">
+          {filteredPhoneModels.map((item) => {
             return (
               <>
-                <Col sm={3}>
+                <Col sm={2} key={item.id}>
                   <Card className="phone-card">
                     <Link to={`/PhoneDetail/${item.id}`}>
                       <div className="card-img-container">
@@ -117,7 +129,9 @@ const Home = () => {
                     <Card.Body>
                       <div className="card-content">
                         <Card.Title>{item.name}</Card.Title>
-                        <Card.Text>{item.promotionalPrice}đ</Card.Text>
+                        <Card.Text>
+                          {item.promotionalPrice.toLocaleString()}đ
+                        </Card.Text>
                       </div>
                       <Link to={"/WishList"} className="favorite-button">
                         <FontAwesomeIcon icon={faHeart} />

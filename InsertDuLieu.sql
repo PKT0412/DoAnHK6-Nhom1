@@ -119,3 +119,14 @@ INSERT INTO PaymentMethods(Name, Image, Status) VALUES (N'Chuyển khoảng ngâ
 INSERT INTO PaymentMethods(Name, Image, Status) VALUES (N'Qua thẻ ATM (có Internet Banking)', N'ATM.png', 1);
 INSERT INTO PaymentMethods(Name, Image, Status) VALUES (N'Qua VNPAY-QR', N'VNPAY.png', 1);
 INSERT INTO PaymentMethods(Name, Image, Status) VALUES (N'Ví MoMo', N'MoMo.png', 1);
+
+
+INSERT INTO SlideShows(Path, Numerical, Status, PhoneModelId) VALUES (N'C53-HC-800-200-800x200.png', 1, 1, 1);
+INSERT INTO SlideShows(Path, Numerical, Status, PhoneModelId) VALUES (N'DT-Cao-Cap-800-200-800x200.png', 1, 1, 1);
+INSERT INTO SlideShows(Path, Numerical, Status, PhoneModelId) VALUES (N'find3-800-200-800x200.png', 1, 1, 1);
+INSERT INTO SlideShows(Path, Numerical, Status, PhoneModelId) VALUES (N'IP15-1200-300-1200x300-1.png', 1, 1, 1);
+INSERT INTO SlideShows(Path, Numerical, Status, PhoneModelId) VALUES (N'M54-800-200-800x200.png', 1, 1, 1);
+INSERT INTO SlideShows(Path, Numerical, Status, PhoneModelId) VALUES (N'Redmi12-800-200-800x200-1.png', 1, 1, 1);
+INSERT INTO SlideShows(Path, Numerical, Status, PhoneModelId) VALUES (N'Simviba-1200-300-1200x300.png', 1, 1, 1);
+INSERT INTO SlideShows(Path, Numerical, Status, PhoneModelId) VALUES (N'V29-800-200-800x200.png', 1, 1, 1);
+INSERT INTO SlideShows(Path, Numerical, Status, PhoneModelId) VALUES (N'xahang-1200-300-1200x300.png', 1, 1, 1);

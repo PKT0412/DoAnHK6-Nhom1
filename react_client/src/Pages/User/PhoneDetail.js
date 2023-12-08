@@ -16,6 +16,8 @@ import Footer from "../Component/Footer";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const PhoneDetailPage = () => {
   const SettingsSlider = {
@@ -67,6 +69,7 @@ const PhoneDetailPage = () => {
 
   const [phoneByColorAndStorage, setPhoneByColorAndStorage] = useState({
     image: "",
+    price: "",
   });
 
   //Ưu tiên hiển thị lại hình của phone
@@ -143,20 +146,22 @@ const PhoneDetailPage = () => {
     <>
       <Header />
 
-      <Container>
-        <Row>
-          <Col md={7}>
+      <Container className="body">
+        <Row className="phone-detail">
+          <Col md={7} className="phone-image-review">
             {/* Hình lớn */}
-            <Image
-              src={`https://localhost:7217/Image/PhoneModel/${
-                phoneModel.name
-              }/${hoveredImage || largeImage}`}
-              fluid
-              className="large-image"
-            />
+            <div className="large-image-container">
+              <Image
+                src={`https://localhost:7217/Image/PhoneModel/${
+                  phoneModel.name
+                }/${hoveredImage || largeImage}`}
+                fluid
+                className="large-image"
+              />
+            </div>
 
             {/* Hình nhỏ */}
-            <Row className="mt-5">
+            <Row className="mt-3">
               <Col md={12}>
                 <div className="slider-container">
                   <Slider {...SettingsSlider} ref={sliderRef}>
@@ -165,7 +170,7 @@ const PhoneDetailPage = () => {
                         <Image
                           src={`https://localhost:7217/Image/PhoneModel/${phoneModel.name}/${image.path}`}
                           alt="Hình nhỏ"
-                          className="slider-image"
+                          className="small-image"
                           thumbnail
                           onClick={() =>
                             handleThumbnailClick(image.path, index)
@@ -179,108 +184,127 @@ const PhoneDetailPage = () => {
                 </div>
               </Col>
             </Row>
+
+            <Row className="review mt-5">
+              <Col md={12}>
+                <h3>Đánh giá:</h3>
+                {reviewData.map((review, index) => (
+                  <Card key={index} className="mb-3">
+                    <Card.Body>
+                      <Card.Text>Người dùng: {review.user}</Card.Text>
+                      <Card.Text>Đánh giá: {review.rating}/5</Card.Text>
+                      <Card.Text>Bình luận: {review.comment}</Card.Text>
+                    </Card.Body>
+                  </Card>
+                ))}
+              </Col>
+            </Row>
           </Col>
 
           <Col md={5} className="phone-info">
             {/* Thông tin sản phẩm */}
             <h2>{phoneByColorAndStorage.name}</h2>
-            <p>{phoneByColorAndStorage.price}đ</p>
+            <p className="price">
+              {phoneByColorAndStorage.price.toLocaleString()}đ
+            </p>
 
             {/* Chọn dung lượng */}
-            <h4>Chọn dung lượng:</h4>
-            {storagePhones.map((item) => {
-              return (
-                <>
-                  <Button
-                    key={item}
-                    style={{ marginRight: "5px" }}
-                    variant={
-                      selectedStorage === item ? "primary" : "outline-primary"
-                    }
-                    onClick={() => setSelectedStorage(item)}
-                  >
-                    {item}
-                  </Button>
-                </>
-              );
-            })}
+            <div>
+              {storagePhones.map((item) => {
+                return (
+                  <>
+                    <Button
+                      className="button-storage"
+                      key={item}
+                      variant={
+                        selectedStorage === item ? "primary" : "outline-primary"
+                      }
+                      onClick={() => setSelectedStorage(item)}
+                    >
+                      {item}
+                    </Button>
+                  </>
+                );
+              })}
+            </div>
 
             {/* Chọn màu */}
-            <h4>Chọn màu:</h4>
-            {colorPhones.map((item) => {
-              return (
-                <>
-                  <Button
-                    key={item}
-                    style={{ marginRight: "5px" }}
-                    variant={
-                      selectedColor === item ? "primary" : "outline-primary"
-                    }
-                    onClick={() => setSelectedColor(item)}
-                  >
-                    {item}
-                  </Button>
-                </>
-              );
-            })}
+            <div>
+              {colorPhones.map((item) => {
+                return (
+                  <>
+                    <Button
+                      className="button-color"
+                      key={item}
+                      variant={
+                        selectedColor === item ? "primary" : "outline-primary"
+                      }
+                      onClick={() => setSelectedColor(item)}
+                    >
+                      {item}
+                    </Button>
+                  </>
+                );
+              })}
+            </div>
 
-            {/* Nút thêm vào giỏ hàng */}
-            <Form.Group as={Row} controlId="quantity" className="mt-2">
-              <Form.Label column sm={2}>
-                Số lượng:
-              </Form.Label>
-              <Col sm={10} className="d-flex align-items-center">
-                <Form.Control
-                  type="number"
-                  min="1"
-                  value={quantity}
-                  onChange={(e) => setQuantity(parseInt(e.target.value))}
-                  size="sm"
-                  style={{ width: "70px" }}
-                />
-              </Col>
+            <Form.Group controlId="quantity" className="quantity">
+              <Form.Label>Số lượng:</Form.Label>
+              <Form.Control
+                className="quantity-control"
+                type="number"
+                min="1"
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
+                size="sm"
+              />
             </Form.Group>
 
             {/* Nút thêm vào giỏ hàng */}
-            <Button variant="danger" className="mt-3 d-block">
-              Thêm vào giỏ hàng
+            <Button variant="danger" className="button-add-cart">
+              <FontAwesomeIcon icon={faPlus} /> Thêm vào giỏ hàng
             </Button>
 
-            <Card className="DetailedConfiguration">
-              <h3>Chi tiết cấu hình:</h3>
+            <Card className="detailed-configuration">
+              <Card.Title>
+                Cấu hình Điện thoại {phoneByColorAndStorage.name}
+              </Card.Title>
               <Card.Body>
-                <Card.Text>Màn hình: {phoneModel.screen}</Card.Text>
                 <Card.Text>
-                  Hệ điều hành: {phoneModel.operatingSystem}
+                  <b>Màn hình:</b> {phoneModel.screen}
                 </Card.Text>
-                <Card.Text>Camera sau: {phoneModel.rearCamera}</Card.Text>
-                <Card.Text>Camera trước: {phoneModel.frontCamera}</Card.Text>
-                <Card.Text>Chip: {phoneModel.chip}</Card.Text>
-                <Card.Text>RAM: {phoneModel.ram}</Card.Text>
                 <Card.Text>
-                  Dung lượng lưu trữ: {phoneByColorAndStorage.storage}
+                  <b>Hệ điều hành:</b> {phoneModel.operatingSystem}
                 </Card.Text>
-                <Card.Text>Màu: {phoneByColorAndStorage.color}</Card.Text>
-                <Card.Text>SIM: {phoneModel.sim}</Card.Text>
-                <Card.Text>Pin, Sạc: {phoneModel.batteryAndCharger}</Card.Text>
-                <Card.Text>Hãng: {phoneModel.brand.name}</Card.Text>
+                <Card.Text>
+                  <b>Camera sau:</b> {phoneModel.rearCamera}
+                </Card.Text>
+                <Card.Text>
+                  <b>Camera trước:</b> {phoneModel.frontCamera}
+                </Card.Text>
+                <Card.Text>
+                  <b>Chip:</b> {phoneModel.chip}
+                </Card.Text>
+                <Card.Text>
+                  <b>RAM:</b> {phoneModel.ram}
+                </Card.Text>
+                <Card.Text>
+                  <b>Dung lượng lưu trữ:</b> {phoneByColorAndStorage.storage}
+                </Card.Text>
+                <Card.Text>
+                  <b>Màu:</b> {phoneByColorAndStorage.color}
+                </Card.Text>
+                <Card.Text>
+                  <b>SIM:</b> {phoneModel.sim}
+                </Card.Text>
+                <Card.Text>
+                  <b>Pin, Sạc:</b> {phoneModel.batteryAndCharger}
+                </Card.Text>
+                <Card.Text>
+                  <b>Hãng:</b> {phoneModel.brand.name}
+                </Card.Text>
               </Card.Body>
             </Card>
-          </Col>
-        </Row>
-
-        <Row className="mt-3">
-          <Col md={12}>
-            <h3>Đánh giá:</h3>
-            {reviewData.map((review, index) => (
-              <Card key={index} className="mb-3">
-                <Card.Body>
-                  <Card.Text>Người dùng: {review.user}</Card.Text>
-                  <Card.Text>Đánh giá: {review.rating}/5</Card.Text>
-                  <Card.Text>Bình luận: {review.comment}</Card.Text>
-                </Card.Body>
-              </Card>
-            ))}
           </Col>
         </Row>
       </Container>
