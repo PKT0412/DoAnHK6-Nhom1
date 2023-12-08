@@ -32,10 +32,19 @@
   margin-top: 20px;
 }
 
-.slideshows .slideshow-img {
+.slideshows .slideshow-container {
+  position: relative;
+  overflow: hidden;
+  padding-top: 15%;
+  margin-top: 20px;
+}
+
+.slideshows .slideshow-container .slideshow-img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: auto;
-  object-fit: cover;
+  height: 100%;
 }
 
 

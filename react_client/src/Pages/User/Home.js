@@ -84,7 +84,7 @@ const Home = () => {
         <Row className="slideshows">
           <Carousel interval={3000}>
             {slideshows.map((slideshow) => (
-              <Carousel.Item key={slideshow.id}>
+              <Carousel.Item key={slideshow.id} className="slideshow-container">
                 <Image
                   className="slideshow-img"
                   src={`https://localhost:7217/Image/SlideShow/${slideshow.path}`}
