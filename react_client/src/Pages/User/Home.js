@@ -56,94 +56,99 @@ const Home = () => {
     <>
       <Header />
 
-      <Container className="body">
-        <Row className="menu">
-          <Navbar bg="light" expand="lg">
-            <Navbar.Brand className="home" href="/">Tất cả</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
-                {brands.map((brand) => (
-                  <Nav.Link
-                    className="brand-link"
-                    key={brand.id}
-                    href={`/PhoneModelByBrand/${brand.id}`}
-                  >
-                    <Image
-                      className="brand-img"
-                      src={`https://localhost:7217/Image/Brand/${brand.image}`}
-                      alt={brand.name}                    
-                    />
-                  </Nav.Link>
-                ))}
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-        </Row>
+      <section className="body">
+        <Navbar expand="lg" className="menu">
+          <Navbar.Brand className="home" href="/">
+            Tất cả
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto ml-auto">
+              {brands.map((brand) => (
+                <Nav.Link
+                  className="brand-link"
+                  key={brand.id}
+                  href={`/PhoneModelByBrand/${brand.id}`}
+                >
+                  <Image
+                    className="brand-img"
+                    src={`https://localhost:7217/Image/Brand/${brand.image}`}
+                    alt={brand.name}
+                  />
+                </Nav.Link>
+              ))}
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
 
-        <Row className="slideshows">
-          <Carousel interval={3000}>
-            {slideshows.map((slideshow) => (
-              <Carousel.Item key={slideshow.id} className="slideshow-container">
-                <Image
-                  className="slideshow-img"
-                  src={`https://localhost:7217/Image/SlideShow/${slideshow.path}`}
-                  alt={slideshow.id}
-                />
-              </Carousel.Item>
-            ))}
-          </Carousel>
-        </Row>
+        <Container>
+          <Row className="slideshows">
+            <Carousel interval={3000}>
+              {slideshows.map((slideshow) => (
+                <Carousel.Item
+                  key={slideshow.id}
+                  className="slideshow-container"
+                >
+                  <Image
+                    className="slideshow-img"
+                    src={`https://localhost:7217/Image/SlideShow/${slideshow.path}`}
+                    alt={slideshow.id}
+                  />
+                </Carousel.Item>
+              ))}
+            </Carousel>
+          </Row>
 
-        <Row className="price-filter">
-          <Col>
-            <Form.Group controlId="priceFilter">
-              <Form.Control
-                as="select"
-                value={selectedPrice}
-                onChange={handlePriceChange}
-                className="select-filter"
-              > 
-                <option value="decrease">Giá cao đến thấp</option>
-                <option value="ascending">Giá thấp đến cao</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-        </Row>
+          <Row className="price-filter">
+            <Col>
+              <Form.Group controlId="priceFilter">
+                <Form.Control
+                  as="select"
+                  value={selectedPrice}
+                  onChange={handlePriceChange}
+                  className="select-filter"
+                >
+                  <option value="decrease">Giá cao đến thấp</option>
+                  <option value="ascending">Giá thấp đến cao</option>
+                </Form.Control>
+              </Form.Group>
+            </Col>
+          </Row>
 
-        <Row className="phonemodels">
-          {filteredPhoneModels.map((item) => {
-            return (
-              <>
-                <Col sm={2} key={item.id}>
-                  <Card className="phone-card">
-                    <Link to={`/PhoneDetail/${item.id}`}>
-                      <div className="card-img-container">
-                        <Card.Img
-                          variant="top"
-                          src={`https://localhost:7217/Image/PhoneModel/${item.name}/${item.image}`}
-                          className="card-img"
-                        />
-                      </div>
-                    </Link>
-                    <Card.Body>
-                      <div className="card-content">
-                        <Card.Title>{item.name}</Card.Title>
-                        <Card.Text>
-                          {item.promotionalPrice.toLocaleString()}đ
-                        </Card.Text>
-                      </div>
-                      <Link to={"/WishList"} className="favorite-button">
-                        <FontAwesomeIcon icon={faHeart} />
+          <Row className="phonemodels">
+            {filteredPhoneModels.map((item) => {
+              return (
+                <>
+                  <Col sm={2} key={item.id}>
+                    <Card className="phone-card">
+                      <Link to={`/PhoneDetail/${item.id}`}>
+                        <div className="card-img-container">
+                          <Card.Img
+                            variant="top"
+                            src={`https://localhost:7217/Image/PhoneModel/${item.name}/${item.image}`}
+                            className="card-img"
+                          />
+                        </div>
                       </Link>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </>
-            );
-          })}
-        </Row>
-      </Container>
+                      <Card.Body>
+                        <div className="card-content">
+                          <Card.Title>{item.name}</Card.Title>
+                          <Card.Text>
+                            {item.promotionalPrice.toLocaleString()}đ
+                          </Card.Text>
+                        </div>
+                        <Link to={"/WishList"} className="favorite-button">
+                          <FontAwesomeIcon icon={faHeart} />
+                        </Link>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </>
+              );
+            })}
+          </Row>
+        </Container>
+      </section>
 
       <Footer />
     </>

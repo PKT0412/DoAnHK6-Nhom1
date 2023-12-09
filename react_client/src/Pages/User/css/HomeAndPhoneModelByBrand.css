@@ -1,11 +1,18 @@
+.menu {
+  background: #515154;
+}
+
 .menu .home {
-  font-size: 18px;
-  margin: 0px 30px 0px 20px;
-  transition: scale 0.3s ease;
+  font-weight: bold;
+  color: #fff;
+  font-size: 20px;
+  margin: 0px 30px 0px 110px;
+  transition: scale 0.3s ease, color 0.3s ease;
 }
 
 .menu .home:hover {
   scale: 1.3;
+  color: #fff;
 }
 
 .menu .brand-link {
@@ -18,18 +25,13 @@
   width: 100px;
   height: auto;
   object-fit: contain;
-  margin-right: 5px;
+  margin-right: 10px;
   border-radius: 10px;
   transition: scale 0.3s ease;
 }
 
 .menu .brand-link .brand-img:hover {
   scale: 1.3;
-}
-
-
-.slideshows {
-  margin-top: 20px;
 }
 
 .slideshows .slideshow-container {
