@@ -146,7 +146,7 @@ const PhoneDetailPage = () => {
     <>
       <Header />
 
-      <Container className="body">
+      <Container className="body-phonedetail">
         <Row className="phone-detail">
           <Col md={7} className="phone-image-review">
             {/* Hình lớn */}
@@ -203,11 +203,11 @@ const PhoneDetailPage = () => {
 
           <Col md={5} className="phone-info">
             {/* Thông tin sản phẩm */}
-            <h2>{phoneByColorAndStorage.name}</h2>
+            <h2 className="name">{phoneByColorAndStorage.name}</h2>
             <p className="price">
               {phoneByColorAndStorage.price.toLocaleString()}đ
             </p>
-
+            <hr />
             {/* Chọn dung lượng */}
             <div>
               {storagePhones.map((item) => {
@@ -217,7 +217,9 @@ const PhoneDetailPage = () => {
                       className="button-storage"
                       key={item}
                       variant={
-                        selectedStorage === item ? "primary" : "outline-primary"
+                        selectedStorage === item
+                          ? "secondary"
+                          : "outline-secondary"
                       }
                       onClick={() => setSelectedStorage(item)}
                     >
@@ -237,7 +239,9 @@ const PhoneDetailPage = () => {
                       className="button-color"
                       key={item}
                       variant={
-                        selectedColor === item ? "primary" : "outline-primary"
+                        selectedColor === item
+                          ? "secondary"
+                          : "outline-secondary"
                       }
                       onClick={() => setSelectedColor(item)}
                     >
@@ -261,7 +265,7 @@ const PhoneDetailPage = () => {
             </Form.Group>
 
             {/* Nút thêm vào giỏ hàng */}
-            <Button variant="danger" className="button-add-cart">
+            <Button variant="primary" className="button-add-cart">
               <FontAwesomeIcon icon={faPlus} /> Thêm vào giỏ hàng
             </Button>
 

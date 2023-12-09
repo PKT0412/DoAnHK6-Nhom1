@@ -56,7 +56,7 @@ const Home = () => {
     <>
       <Header />
 
-      <section className="body">
+      <section className="body-home">
         <Navbar expand="lg" className="menu">
           <Navbar.Brand className="home" href="/">
             Tất cả
@@ -64,19 +64,23 @@ const Home = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto ml-auto">
-              {brands.map((brand) => (
-                <Nav.Link
-                  className="brand-link"
-                  key={brand.id}
-                  href={`/PhoneModelByBrand/${brand.id}`}
-                >
-                  <Image
-                    className="brand-img"
-                    src={`https://localhost:7217/Image/Brand/${brand.image}`}
-                    alt={brand.name}
-                  />
-                </Nav.Link>
-              ))}
+              <Row>
+                {brands.map((brand) => (
+                  <Col md={2}>
+                    <Nav.Link
+                      className="brand-link"
+                      key={brand.id}
+                      href={`/PhoneModelByBrand/${brand.id}`}
+                    >
+                      <Image
+                        className="brand-img"
+                        src={`https://localhost:7217/Image/Brand/${brand.image}`}
+                        alt={brand.name}
+                      />
+                    </Nav.Link>
+                  </Col>
+                ))}
+              </Row>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -134,7 +138,9 @@ const Home = () => {
                         <div className="card-content">
                           <Card.Title>{item.name}</Card.Title>
                           <Card.Text>
-                            {item.promotionalPrice.toLocaleString()}đ
+                            <span className="old-price">{item.oldPrice.toLocaleString()}đ</span>
+                            <br/>
+                            <span className="promational-price"> {item.promotionalPrice.toLocaleString()}đ</span>
                           </Card.Text>
                         </div>
                         <Link to={"/WishList"} className="favorite-button">
@@ -142,7 +148,7 @@ const Home = () => {
                         </Link>
                       </Card.Body>
                     </Card>
-                  </Col>
+                  </Col>                 
                 </>
               );
             })}
