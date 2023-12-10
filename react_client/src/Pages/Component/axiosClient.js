@@ -13,7 +13,7 @@ axiosClient.interceptors.response.use(
     res => res,
     error => {
         if (error.response.status === 401) {
-            window.location.href = `http://localhost:3000/login`;
+            window.location.href = `http://localhost:3000/Login`;
         }
         console.error(`Error! Status Code: ` + error.response.status);
         return Promise.reject(error);

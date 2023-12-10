@@ -1,15 +1,42 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Col } from 'react-bootstrap';
-import Header from '../Component/Header';
+import { useNavigate } from 'react-router';
+import axios from 'axios';
+import Header from '../Header/Header.js';
 
-const Signin = () => {
+const Login = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate();
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Xử lý đăng nhập
-    // ...
+  
+    if (username === '' || password === '') {
+      alert('Vui lòng điền đầy đủ thông tin đăng nhập.');
+      return;
+    }
+  
+    axios
+      .post('https://localhost:7217/api/Users/login', {
+        username: username,
+        password: password,
+      })
+      .then((response) => {
+        const token = response.data.token;
+  
+        // Lưu token vào localStorage
+        localStorage.setItem('token', token);
+  
+        // Điều hướng đến trang chính
+        navigate('/Login');
+      })
+      .catch((error) => {
+        console.log('Đăng nhập không thành công:', error);
+        alert('Đăng nhập không thành công. Vui lòng kiểm tra tên đăng nhập và mật khẩu.');
+      });
   };
 
   return (
@@ -25,6 +52,7 @@ const Signin = () => {
               type="text"
               placeholder="Nhập tài khoản"
               value={username}
+              id="username"
               onChange={(e) => setUsername(e.target.value)}
             />
           </Form.Group>
@@ -35,6 +63,7 @@ const Signin = () => {
               type="password"
               placeholder="Nhập mật khẩu"
               value={password}
+              id="password"
               onChange={(e) => setPassword(e.target.value)}
             />
           </Form.Group>
@@ -56,4 +85,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default Login;

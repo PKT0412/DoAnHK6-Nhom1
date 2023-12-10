@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
-import Header from '../Component/Header';
+import Header from '../Header/Header';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 
-const Signup = () => {
+const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [fullname, setFullname] = useState('');
@@ -12,16 +12,25 @@ const Signup = () => {
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [gender, setGender] = useState('');
+  const [birthDay, setBirthDay] = useState('');
+
 
   const navigate = useNavigate();
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post(`https://localhost:7217/api/Users/register`,)
-        .then(() => {
-            navigate("/Signup");
-        });
+    axios.post(`https://localhost:7217/api/Users/register`,
+      username,
+      password,
+      fullname,
+      email,
+      address,
+      phone,
+      gender,
+      birthDay).then(() => {
+        navigate("/Register");
+      });
   };
 
   return (
@@ -91,6 +100,16 @@ const Signup = () => {
             />
           </Form.Group>
 
+          <Form.Group controlId="formBasicBirthDay">
+            <Form.Label>Ngày sinh</Form.Label>
+            <Form.Control
+              type="date"
+              placeholder="Chọn ngày sinh"
+              value={birthDay}
+              onChange={(e) => setBirthDay(e.target.value)}
+            />
+          </Form.Group>
+
           <div className="my-4">
             <Form.Group controlId="formBasicGender">
               <Form.Label>Giới tính</Form.Label>
@@ -138,4 +157,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Register;

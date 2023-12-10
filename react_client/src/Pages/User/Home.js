@@ -13,9 +13,9 @@ import {
 import "./css/HomeAndPhoneModelByBrand.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import Header from "../Component/Header";
+import Header from '../Component/Header/Header.js';
 import axiosClient from "../Component/axiosClient";
-import Footer from "../Component/Footer";
+import Footer from "../Component/Footer/Footer";
 import { Link } from "react-router-dom";
 
 const Home = () => {

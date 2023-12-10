@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faSearch, faShoppingBag, faUser } from '@fortawesome/free-solid-svg-icons';
-import "./css/Header.css";
+import "./Header.css";
 
 const Header = () => {
   return (
@@ -33,8 +33,8 @@ const Header = () => {
             </Col>
             <Col xs lg="3" className="d-flex justify-content-end">
               <DropdownButton id="dropdown-basic-button" title={<FontAwesomeIcon icon={faUser} />}>
-                <Dropdown.Item href="/Signin">Đăng nhập</Dropdown.Item>
-                <Dropdown.Item href="/Signup">Đăng ký</Dropdown.Item>
+                <Dropdown.Item href="/Login">Đăng nhập</Dropdown.Item>
+                <Dropdown.Item href="/Register">Đăng ký</Dropdown.Item>
               </DropdownButton>
             </Col>
           </Navbar>

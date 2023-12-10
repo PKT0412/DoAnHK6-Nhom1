@@ -11,8 +11,8 @@ import {
 import { useParams } from "react-router";
 import axiosClient from "../Component/axiosClient";
 import "./css/PhoneDetail.css";
-import Header from "../Component/Header";
-import Footer from "../Component/Footer";
+import Header from "../Component/Header/Header";
+import Footer from "../Component/Footer/Footer";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
