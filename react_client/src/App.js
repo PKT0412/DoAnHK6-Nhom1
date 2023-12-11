@@ -4,8 +4,6 @@ import PhoneDetail from "./Pages/User/PhoneDetail";
 import Account from "./Pages/User/Account";
 import Cart from "./Pages/User/Cart";
 import Pay from "./Pages/User/Pay";
-import Login from "./Pages/Component/Login/Login";
-import Register from "./Pages/Component/Register/Register";
 import Wishlist from "./Pages/User/Wishlist";
 import BrandList from "./Pages/Admin/BrandList";
 import BrandAdd from "./Pages/Admin/BrandAdd";
@@ -13,9 +11,8 @@ import BrandEdit from "./Pages/Admin/BrandEdit";
 import HomeAdmin from "./Pages/Admin/HomeAdmin";
 import PhoneModelByBrand from "./Pages/User/PhoneModelByBrand";
 import ProductList from "./Pages/Admin/ProductList";
-import ProductAdd from "./Pages/Admin/ProductAdd";
-import Header from "../Component/Header/Header";
-import Footer from "../Component/Footer/Footer";
+import Login from "./Pages/Component/Login/Login";
+import Register from "./Pages/Component/Register/Register";
 
 const App = () => {
   return (
@@ -39,7 +36,6 @@ const App = () => {
           <Route path="/Admin/Brand/Add" element={<BrandAdd />} />
           <Route path="/Admin/Brand/Edit/:id" element={<BrandEdit />} />
           <Route path="/Admin/Product" element={<ProductList />}/>
-          <Route path="/Admin/Product/Add" element={<ProductAdd />} />
         </Routes>
       </BrowserRouter>
     </>
