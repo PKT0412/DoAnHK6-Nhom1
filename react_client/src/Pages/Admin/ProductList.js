@@ -19,8 +19,8 @@ const ProductList = () => {
       "Bạn có chắc chắn muốn xóa tài khoản này?"
     );
     if (shouldDelete) {
-      axiosClient.delete(
-        `https://localhost:7217/api/PhoneModels/${id}`
+      axiosClient
+          .delete(`https://localhost:7217/api/PhoneModels/${id}`
           .then(() => {
             setProduct(product.filter((item) => item.id !== id));
           })
