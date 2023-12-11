@@ -1,24 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Button, Container, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import Header from '../Header/Header.js';
+import { useCookies } from 'react-cookie';
 
 const Login = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cookies, setCookie] = useCookies(['token']);
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Kiểm tra trạng thái đăng nhập khi component được tải lần đầu
+    checkLoginStatus();
+  }, []);
 
-  const handleSubmit = (e) => {
+  const checkLoginStatus = () => {
+    // Kiểm tra xem token đã tồn tại hay không
+    if (cookies.token) {
+      // Điều hướng đến trang chính
+      navigate('/');
+    }
+  };
+
+  const handleLogin = (e) => {
     e.preventDefault();
-  
+
     if (username === '' || password === '') {
       alert('Vui lòng điền đầy đủ thông tin đăng nhập.');
       return;
     }
-  
+
     axios
       .post('https://localhost:7217/api/Users/login', {
         username: username,
@@ -26,12 +41,12 @@ const Login = (props) => {
       })
       .then((response) => {
         const token = response.data.token;
-  
-        // Lưu token vào localStorage
-        localStorage.setItem('token', token);
-  
-        // Điều hướng đến trang chính
-        navigate('/Login');
+
+        // Lưu token vào cookie
+        setCookie('token', token, { path: '/' });
+
+        // Kiểm tra trạng thái đăng nhập sau khi đăng nhập thành công
+        checkLoginStatus();
       })
       .catch((error) => {
         console.log('Đăng nhập không thành công:', error);
@@ -39,11 +54,22 @@ const Login = (props) => {
       });
   };
 
+  const handleLogout = (e) => {
+    // Xóa token khỏi cookie
+    setCookie('token', '', { path: '/' });
+    
+    // Cập nhật trạng thái đăng nhập
+    setIsLoggedIn(false);
+    
+    // Điều hướng người dùng đến trang đăng nhập
+    navigate('/login');
+  };
+
   return (
     <>
       <Header></Header>
       <Container className="d-flex justify-content-center align-items-center">
-        <Form onSubmit={handleSubmit} className="w-50 p-4 rounded bg-light">
+        <Form onSubmit={handleLogin} className="w-50 p-4 rounded bg-light">
           <h3 className="mb-4 text-center">Đăng nhập</h3>
 
           <Form.Group controlId="formBasicUsername">
@@ -68,7 +94,7 @@ const Login = (props) => {
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="w-100 mt-3">
+          <Button variant="primary" type="submit" className="w-100 mt-3" onChange={handleLogin}>
             Đăng nhập
           </Button>
           <Col className="d-flex justify-content-center">
@@ -79,8 +105,10 @@ const Login = (props) => {
               </a>
             </p>
           </Col>
+          
         </Form>
       </Container>
+      
     </>
   );
 };

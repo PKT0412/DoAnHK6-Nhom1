@@ -14,8 +14,6 @@ import HomeAdmin from "./Pages/Admin/HomeAdmin";
 import PhoneModelByBrand from "./Pages/User/PhoneModelByBrand";
 import ProductList from "./Pages/Admin/ProductList";
 import ProductAdd from "./Pages/Admin/ProductAdd";
-import Header from "../Component/Header/Header";
-import Footer from "../Component/Footer/Footer";
 
 const App = () => {
   return (
@@ -23,10 +21,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route
-            path="/PhoneModelByBrand/:BrandId"
-            element={<PhoneModelByBrand />}
-          />
+          <Route path="/PhoneModelByBrand/:BrandId" element={<PhoneModelByBrand />} />
           <Route path="/PhoneDetail/:id" element={<PhoneDetail />} />
           <Route path="/Account" element={<Account />} />
           <Route path="/Cart" element={<Cart />} />
