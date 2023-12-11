@@ -134,7 +134,7 @@ const ProductList = () => {
               </ol>
               <div className="card mb-4"></div>
               <div className="card mb-4">
-                <Link to="/Admin/Brand/Add" className="btn btn-success">
+                <Link to="/Admin/Product/Add" className="btn btn-success">
                   Thêm
                 </Link>
                 <div className="card-header">
@@ -215,8 +215,9 @@ const ProductList = () => {
                             <Col md={6}>
                               <dd>
                                 <img
-                                  src={`https://localhost:7217/Image/PhoneModel${setSelectedProduct.image}`}
+                                  src={`https://localhost:7217/Image/PhoneModel/${selectedProduct.name}/${selectedProduct.image}`}
                                   alt=""
+                                  style={{width:300}}
                                 />
                               </dd>
                             </Col>
