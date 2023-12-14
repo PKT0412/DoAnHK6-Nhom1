@@ -15,10 +15,12 @@ namespace API_Server.Controllers
     public class BrandsController : ControllerBase
     {
         private readonly API_ServerContext _context;
+        private readonly IWebHostEnvironment _environment;
 
-        public BrandsController(API_ServerContext context)
+        public BrandsController(API_ServerContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         // GET: api/Brands
@@ -76,8 +78,23 @@ namespace API_Server.Controllers
         // POST: api/Brands
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Brand>> PostBrand(Brand brand)
+        public async Task<ActionResult<Brand>> PostBrand([FromForm] Brand brand)
         {
+            if(brand.ImageFile != null && brand.ImageFile.Length > 0)
+            {
+                var fileName = brand.Name.ToString() + Path.GetExtension(brand.ImageFile.FileName);
+                var imagePath = Path.Combine(_environment.WebRootPath, "Image", "Brand");
+
+                var uploadPath = Path.Combine(imagePath, fileName);
+                using (var fileStream = new FileStream(uploadPath, FileMode.Create))
+                {
+                    await brand.ImageFile.CopyToAsync(fileStream);
+                }
+
+                //Lưu đường dẫn hình ảnh vào trường Image
+                brand.Image = brand.ImageFile.FileName;
+            }
+
             _context.Brands.Add(brand);
             await _context.SaveChangesAsync();
 

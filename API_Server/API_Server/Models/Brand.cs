@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API_Server.Models
 {
@@ -9,6 +10,9 @@ namespace API_Server.Models
         public string Name { get; set; }
 
         public string Image { get; set; }
+
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
 
         [DefaultValue(true)]
         public bool Status { get; set; }
