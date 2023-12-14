@@ -13,3 +13,16 @@ h3{
   width: auto;
   height: auto;
 }
+
+.LinkHeader{
+  color: gray;
+}
+
+.logo-image{
+  width: 15%;
+  margin-left: 300px;
+}
+
+.Navbar{
+  background: #515154;
+}

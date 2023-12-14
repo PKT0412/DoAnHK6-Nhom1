@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import Header from '../Header/Header';
 import axios from 'axios';
-import { useNavigate } from 'react-router';
+import { useNavigate } from "react-router-dom";
+import { useCookies } from 'react-cookie';
 
 const Register = () => {
+  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [fullname, setFullname] = useState('');
@@ -13,31 +15,56 @@ const Register = () => {
   const [phone, setPhone] = useState('');
   const [gender, setGender] = useState('');
   const [birthDay, setBirthDay] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cookies, setCookie] = useCookies(['token']);
 
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Kiểm tra trạng thái đăng nhập khi component được tải lần đầu
+    checkLoginStatus();
+  }, []);
 
-  const handleSubmit = (e) => {
+  const checkLoginStatus = () => {
+    // Kiểm tra xem token đã tồn tại hay không
+    if (cookies.token) {
+      // Điều hướng đến trang chính
+      navigate('/');
+    }
+  };
+
+  const handleRegister = async (e) => {
     e.preventDefault();
-    axios.post(`https://localhost:7217/api/Users/register`,
-      username,
-      password,
-      fullname,
-      email,
-      address,
-      phone,
-      gender,
-      birthDay).then(() => {
-        navigate("/Register");
+    if (username === '' || password === '' || email === '' || address === '' || phone === '' || gender === '' || birthDay === '') {
+      alert('Vui lòng điền đầy đủ thông tin đăng ký.');
+      return;
+    }
+  
+    try {
+      await axios.post(`https://localhost:7217/api/Users/register`, {
+        username: username,
+        password: password,
+        fullname: fullname,
+        email: email,
+        address: address,
+        phone: phone,
+        gender: gender,
+        birthDay: birthDay,
       });
+      // Thực hiện chuyển hướng đến trang chủ
+      navigate('/');
+    } catch (error) {
+      console.log('Đăng ký không thành công:', error);
+      alert('Đăng ký không thành công. Vui lòng kiểm tra thông tin trên.');
+    }
   };
 
   return (
     <>
       <Header></Header>
       <Container className="d-flex justify-content-center align-items-center">
-        <Form onSubmit={handleSubmit} className="w-50 p-4 rounded bg-light">
+        <Form onSubmit={handleRegister} className="w-50 p-4 rounded bg-light">
           <h3 className="mb-4 text-center">Đăng ký</h3>
 
           <Form.Group controlId="formBasicUsername">

@@ -62,7 +62,7 @@ const Login = (props) => {
     setIsLoggedIn(false);
     
     // Điều hướng người dùng đến trang đăng nhập
-    navigate('/login');
+    navigate('/');
   };
 
   return (
