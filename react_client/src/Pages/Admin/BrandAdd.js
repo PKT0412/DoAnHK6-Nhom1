@@ -3,8 +3,12 @@ import { useNavigate } from "react-router";
 import axiosClient from "../Component/axiosClient";
 import { Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 const BrandAdd = () => {
   const [brand, setBrand] = useState({
+    ImageFile: null,
     status: true,
   });
   const navigate = useNavigate();
@@ -19,12 +23,26 @@ const BrandAdd = () => {
     let value = e.target.checked;
     setBrand((prev) => ({ ...prev, [name]: value }));
   };
-  const handleSubnmit = (e) => {
-    e.preventDefault();
-    axiosClient.post("/Brands", brand).then(() => {
-      navigate("/Admin/Brand");
+  const handleImageChange = (e) => {
+    setBrand((prev) => ({ ...prev, ImageFile: e.target.files[0] }));
+  }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    Object.entries(brand).forEach(([key, value]) => {
+      formData.append(key, value);
     });
-  };
+
+    axios.post(`https://localhost:7217/api/Brands`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }).then(() => {
+      navigate("/admin/brand");
+    });
+  }
+
   return (
     <>
       <div>
@@ -131,8 +149,15 @@ const BrandAdd = () => {
                 <li className="breadcrumb-item active">Add</li>
               </ol>
 
-              <Form className="col-md-4" onSubmit={handleSubnmit} style={{marginLeft: "50px"}}>
-                <Form.Group>
+              <Form
+                className="col-md-3"
+                style={{ marginLeft: "50px" }}
+              >
+                <Form.Group className="mb-3">
+                  <Form.Label>Ảnh</Form.Label>
+                  <Form.Control type="file" name="ImageFile" onChange={handleImageChange}/>
+                </Form.Group>
+                <Form.Group className="mb-3">
                   <Form.Label>Name</Form.Label>
                   <Form.Control
                     type="name"
@@ -140,23 +165,18 @@ const BrandAdd = () => {
                     onChange={handleChange}
                   />
                 </Form.Group>
-                <Form.Group>
-                  <Form.Label>Image</Form.Label>
-                  <Form.Control type="text" name="image" />
-                </Form.Group>
-                <Form.Group>
+                <Form.Group className="mb-3">
                   <Form.Check
                     type="switch"
                     name="status"
                     label="Còn hoạt động"
                     onChange={handleCheck}
+                    checked
                   />
                 </Form.Group>
-                <div className="mt-2">
-                  <Button type="submit" variant="success">
-                    Thêm
-                  </Button>
-                </div>
+                <Button type="submit" variant="success" onClick={handleSubmit}>
+                  <FontAwesomeIcon icon={faPlus} /> Thêm
+                </Button>
               </Form>
             </div>
 
