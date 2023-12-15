@@ -16,11 +16,11 @@ const ProductList = () => {
   };
   const handleDelete = (id) => {
     const shouldDelete = window.confirm(
-      "Bạn có chắc chắn muốn xóa tài khoản này?"
+      "Bạn có chắc chắn muốn xóa sản phẩm này?"
     );
     if (shouldDelete) {
-      axiosClient
-          .delete(`https://localhost:7217/api/PhoneModels/${id}`
+      axiosClient.delete(
+        `https://localhost:7217/api/PhoneModels/${id}`
           .then(() => {
             setProduct(product.filter((item) => item.id !== id));
           })
@@ -217,7 +217,7 @@ const ProductList = () => {
                                 <img
                                   src={`https://localhost:7217/Image/PhoneModel/${selectedProduct.name}/${selectedProduct.image}`}
                                   alt=""
-                                  style={{width:300}}
+                                  style={{ width: 300 }}
                                 />
                               </dd>
                             </Col>
@@ -250,7 +250,11 @@ const ProductList = () => {
                                 <dt>BrandId</dt>
                                 <dd>{selectedProduct.brandId}</dd>
                                 <dt>Status</dt>
-                                <dd>{selectedProduct.status===0 ? " Không hoạt động" : "Hoạt động" }</dd>
+                                <dd>
+                                  {selectedProduct.status === 0
+                                    ? " Không hoạt động"
+                                    : "Hoạt động"}
+                                </dd>
                               </dl>
                             </Col>
                           </Row>
