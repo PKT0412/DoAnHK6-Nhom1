@@ -14,7 +14,7 @@ const Cart = () => {
   // Xử lý tổng tiền cửa các sán phẩm
   const [totalPrice, setTotalPrice] = useState(0);
 
-  const fetchCartItemsFromAPI = () => {
+  const FetchCartItemsFromAPI = () => {
     return axiosClient
       .get(`https://localhost:7217/api/PhoneModels`)
       .then((res) => {
@@ -23,7 +23,7 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    fetchCartItemsFromAPI().catch((error) => console.log(error));
+    FetchCartItemsFromAPI().catch((error) => console.log(error));
   }, []);
 
   useEffect(() => {
@@ -117,7 +117,10 @@ const Cart = () => {
                         />
                       }
                     </td>
-                    <td>{item.name}</td>
+                    <td>
+                      <div>{item.name}</div>
+                      <Link to={"/PhoneDetail/:id"}>Sửa</Link>
+                    </td>
                     <td>{item.oldPrice}</td>
                     <td>
                       <div
