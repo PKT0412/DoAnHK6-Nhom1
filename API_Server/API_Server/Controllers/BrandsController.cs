@@ -47,7 +47,7 @@ namespace API_Server.Controllers
         // PUT: api/Brands/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBrand(int id, Brand brand)
+        public async Task<IActionResult> PutBrand([FromForm] int id, [FromForm] Brand brand)
         {
             if (id != brand.Id)
             {
@@ -58,6 +58,27 @@ namespace API_Server.Controllers
 
             try
             {
+                if (brand.ImageFile != null && brand.ImageFile.Length > 0)
+                {
+                    var fileName = brand.ImageFile.FileName;
+                    var imagePath = Path.Combine(_environment.WebRootPath, "Image", "Brand");
+                    var uploadPath = Path.Combine(imagePath, fileName);
+                    using (var fileStream = new FileStream(uploadPath, FileMode.Create))
+                    {
+                        await brand.ImageFile.CopyToAsync(fileStream);
+                    }
+                    //Xóa ảnh cũ
+                    var oldImagePath = Path.Combine(_environment.WebRootPath, "Image", "Brand", brand.Image);
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+
+                    //Lưu đường dẫn hình ảnh vào trường Image
+                    brand.Image = brand.ImageFile.FileName;
+                }
+
+                _context.Brands.Update(brand);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -82,9 +103,8 @@ namespace API_Server.Controllers
         {
             if(brand.ImageFile != null && brand.ImageFile.Length > 0)
             {
-                var fileName = brand.Name.ToString() + Path.GetExtension(brand.ImageFile.FileName);
+                var fileName = brand.ImageFile.FileName;
                 var imagePath = Path.Combine(_environment.WebRootPath, "Image", "Brand");
-
                 var uploadPath = Path.Combine(imagePath, fileName);
                 using (var fileStream = new FileStream(uploadPath, FileMode.Create))
                 {

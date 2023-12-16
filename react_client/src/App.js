@@ -12,8 +12,9 @@ import BrandAdd from "./Pages/Admin/BrandAdd";
 import BrandEdit from "./Pages/Admin/BrandEdit";
 import HomeAdmin from "./Pages/Admin/HomeAdmin";
 import PhoneModelByBrand from "./Pages/User/PhoneModelByBrand";
-import ProductList from "./Pages/Admin/ProductList";
-import ProductAdd from "./Pages/Admin/ProductAdd";
+import PhoneModelList from "./Pages/Admin/PhoneModelList";
+import PhoneModelAdd from "./Pages/Admin/PhoneModelAdd";
+import PhoneModelEdit from "./Pages/Admin/PhoneModelEdit";
 
 const App = () => {
   return (
@@ -29,12 +30,14 @@ const App = () => {
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/Wishlist" element={<Wishlist />} />
+
           <Route path="/Admin" element={<HomeAdmin />} />
           <Route path="/Admin/Brand" element={<BrandList />} />
           <Route path="/Admin/Brand/Add" element={<BrandAdd />} />
           <Route path="/Admin/Brand/Edit/:id" element={<BrandEdit />} />
-          <Route path="/Admin/Product" element={<ProductList />}/>
-          <Route path="/Admin/Product/Add" element={<ProductAdd />} />
+          <Route path="/Admin/PhoneModel" element={<PhoneModelList />}/>
+          <Route path="/Admin/PhoneModel/Add" element={<PhoneModelAdd />} />
+          <Route path="/Admin/PhoneModel/Edit/:id" element={<PhoneModelEdit />} />
         </Routes>
       </BrowserRouter>
     </>
