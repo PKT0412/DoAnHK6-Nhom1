@@ -18,6 +18,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const PhoneDetailPage = () => {
   const SettingsSlider = {
@@ -263,11 +264,18 @@ const PhoneDetailPage = () => {
                 size="sm"
               />
             </Form.Group>
-
-            {/* Nút thêm vào giỏ hàng */}
-            <Button variant="primary" className="button-add-cart">
+            
+              {/* Nút thêm vào giỏ hàng thay bằng link to của reactjs  */}
+              <Link to="/Cart">
+                <Button variant="primary" className="button-add-cart">
               <FontAwesomeIcon icon={faPlus} /> Thêm vào giỏ hàng
             </Button>
+            </Link>
+
+            {/* Nút thêm vào giỏ hàng */}
+            {/* <Button variant="primary" className="button-add-cart">
+              <FontAwesomeIcon icon={faPlus} /> Thêm vào giỏ hàng
+            </Button> */}
 
             <Card className="detailed-configuration">
               <Card.Title>
