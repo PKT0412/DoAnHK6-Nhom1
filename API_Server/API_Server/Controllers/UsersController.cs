@@ -66,51 +66,53 @@ namespace API_Server.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register(string Username, string Password, string Email, string FullName, string Gender, DateTime BirthDay, string Address, string PhoneNumber)
+        public async Task<IActionResult> Register([Bind("Username", "Password", "Email", "FullName", "Gender", "BirthDay", "Address", "PhoneNumber")] RegisterModel account)
         {
-            var userExists = await _userManager.FindByNameAsync(Username);
+            var userExists = await _userManager.FindByNameAsync(account.Username);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError);
 
             User user = new User()
             {
-                Email = Email,
+                Email = account.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = Username,
-                FullName = FullName,
-                Gender = Gender,
-                BirthDay = BirthDay,
-                Address = Address,
-                PhoneNumber = PhoneNumber
+                UserName = account.Username,
+                FullName = account.FullName,
+                Gender = account.Gender,
+                BirthDay = account.BirthDay,
+                Address = account.Address,
+                PhoneNumber = account.PhoneNumber
             };
-            var result = await _userManager.CreateAsync(user, Password);
+            var result = await _userManager.CreateAsync(user, account.Password);
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError);
-
+            if (await _roleManager.RoleExistsAsync("User"))
+                await _userManager.AddToRoleAsync(user, "User");
             return Ok();
         }
 
+
         [HttpPost]
         [Route("register-admin")]
-        public async Task<IActionResult> RegisterAdmin(string Username, string Password, string Email, string FullName, string Gender, DateTime BirthDay, string Address, string PhoneNumber)
+        public async Task<IActionResult> RegisterAdmin([Bind("Username", "Password", "Email", "FullName", "Gender", "BirthDay", "Address", "PhoneNumber")] RegisterModel admin)
         {
-            var userExists = await _userManager.FindByNameAsync(Username);
+            var userExists = await _userManager.FindByNameAsync(admin.Username);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError);
 
             User user = new User()
             {
-                Email = Email,
+                Email = admin.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = Username,
-                FullName = FullName,
-                Gender = Gender,
-                BirthDay = BirthDay,
-                Address = Address,
-                PhoneNumber = PhoneNumber,
+                UserName = admin.Username,
+                FullName = admin.FullName,
+                Gender = admin.Gender,
+                BirthDay = admin.BirthDay,
+                Address = admin.Address,
+                PhoneNumber = admin.PhoneNumber,
 
             };
-            var result = await _userManager.CreateAsync(user, Password);
+            var result = await _userManager.CreateAsync(user, admin.Password);
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError);
 

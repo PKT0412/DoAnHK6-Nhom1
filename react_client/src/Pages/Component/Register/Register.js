@@ -1,64 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import Header from '../Header/Header';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import { useCookies } from 'react-cookie';
 
 const Register = () => {
-  
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [fullname, setFullname] = useState('');
-  const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');
-  const [phone, setPhone] = useState('');
-  const [gender, setGender] = useState('');
-  const [birthDay, setBirthDay] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [cookies, setCookie] = useCookies(['token']);
-
-
+  const [user, setUser] = useState({});
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Kiểm tra trạng thái đăng nhập khi component được tải lần đầu
-    checkLoginStatus();
-  }, []);
-
-  const checkLoginStatus = () => {
-    // Kiểm tra xem token đã tồn tại hay không
-    if (cookies.token) {
-      // Điều hướng đến trang chính
-      navigate('/');
-    }
+  const handleChange = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    setUser(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleRegister = async (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
-    if (username === '' || password === '' || email === '' || address === '' || phone === '' || gender === '' || birthDay === '') {
+    if (!user.username || !user.password || !user.fullname || !user.email || !user.address || !user.phone || !user.birthDay || !user.gender) {
       alert('Vui lòng điền đầy đủ thông tin đăng ký.');
       return;
     }
-  
-    try {
-      await axios.post(`https://localhost:7217/api/Users/register`, {
-        username: username,
-        password: password,
-        fullname: fullname,
-        email: email,
-        address: address,
-        phone: phone,
-        gender: gender,
-        birthDay: birthDay,
+
+    axios.post(`https://localhost:7217/api/Users/register`, user)
+      .then(() => {
+        navigate("/login");
+      })
+      .catch(error => {
+        console.log('Đăng ký không thành công:', error);
+        alert('Đăng ký không thành công. Vui lòng kiểm tra thông tin trên.');
       });
-      // Thực hiện chuyển hướng đến trang chủ
-      navigate('/');
-    } catch (error) {
-      console.log('Đăng ký không thành công:', error);
-      alert('Đăng ký không thành công. Vui lòng kiểm tra thông tin trên.');
-    }
   };
+
+  
 
   return (
     <>
@@ -72,8 +45,8 @@ const Register = () => {
             <Form.Control
               type="text"
               placeholder="Nhập tài khoản"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              name="username"
+              onChange={handleChange}
             />
           </Form.Group>
 
@@ -82,18 +55,18 @@ const Register = () => {
             <Form.Control
               type="password"
               placeholder="Nhập mật khẩu"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              onChange={handleChange}
             />
           </Form.Group>
 
           <Form.Group controlId="formBasicFullname">
             <Form.Label>Họ tên</Form.Label>
             <Form.Control
-              type="fullname"
+              type="text"
               placeholder="Nhập Họ tên"
-              value={fullname}
-              onChange={(e) => setFullname(e.target.value)}
+              name="fullname"
+              onChange={handleChange}
             />
           </Form.Group>
 
@@ -102,8 +75,8 @@ const Register = () => {
             <Form.Control
               type="email"
               placeholder="Nhập email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              onChange={handleChange}
             />
           </Form.Group>
 
@@ -112,8 +85,8 @@ const Register = () => {
             <Form.Control
               type="text"
               placeholder="Nhập địa chỉ"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              name="address"
+              onChange={handleChange}
             />
           </Form.Group>
 
@@ -122,8 +95,8 @@ const Register = () => {
             <Form.Control
               type="text"
               placeholder="Nhập số điện thoại"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              name="phone"
+              onChange={handleChange}
             />
           </Form.Group>
 
@@ -132,8 +105,8 @@ const Register = () => {
             <Form.Control
               type="date"
               placeholder="Chọn ngày sinh"
-              value={birthDay}
-              onChange={(e) => setBirthDay(e.target.value)}
+              name="birthDay"
+              onChange={handleChange}
             />
           </Form.Group>
 
@@ -147,8 +120,7 @@ const Register = () => {
                     label="Nam"
                     name="gender"
                     value="male"
-                    checked={gender === 'male'}
-                    onChange={(e) => setGender(e.target.value)}
+                    onChange={handleChange}
                   />
                 </Col>
 
@@ -158,8 +130,7 @@ const Register = () => {
                     label="Nữ"
                     name="gender"
                     value="female"
-                    checked={gender === 'female'}
-                    onChange={(e) => setGender(e.target.value)}
+                    onChange={handleChange}
                   />
                 </Col>
               </Row>

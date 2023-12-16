@@ -19,10 +19,13 @@ h3{
 }
 
 .logo-image{
-  width: 15%;
-  margin-left: 300px;
+  width: 20%;
 }
 
 .Navbar{
   background: #515154;
 }
+.header{
+  background: #515154;
+}
+

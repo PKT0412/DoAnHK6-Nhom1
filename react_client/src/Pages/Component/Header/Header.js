@@ -35,6 +35,8 @@ const Header = () => {
 
   return (
     <>
+    <div className="header">
+    <Container>
         <Row className="justify-content-center">
           <Navbar className='Navbar' expand="lg">
             <Col xs lg="4">
@@ -42,7 +44,7 @@ const Header = () => {
                <img src={`https://localhost:7217/Image/Logo/LogoDEMO.png`} alt="Logo" className="logo-image" ></img>
               </Navbar.Brand>
             </Col>
-            <Col xs lg="2">
+            <Col xs lg="3">
               <Form className="d-flex">
                 <Form.Control type="text" placeholder="Search" className="mr-sm-2" />
                 <Button type="submit" variant='secondary'>
@@ -50,7 +52,7 @@ const Header = () => {
                 </Button>
               </Form>
             </Col>
-            <Col xs lg="1" className="d-flex justify-content-center">
+            <Col xs lg="2" className="d-flex justify-content-center">
               <Link to="/shopping-bag" className='LinkHeader'>
                 <FontAwesomeIcon icon={faShoppingBag} className="shopping-icon" />
               </Link>
@@ -60,7 +62,7 @@ const Header = () => {
                 <FontAwesomeIcon icon={faHeart} className="favorite-icon" />
               </Link>
             </Col>
-            <Col xs lg="3" className="d-flex justify-content-end">
+            <Col xs lg="2" className="d-flex justify-content-end">
 
               {isLoggedIn ? (
                 <DropdownButton id="dropdown-basic-button" title={<FontAwesomeIcon icon={faUser} />}>
@@ -75,6 +77,8 @@ const Header = () => {
             </Col>
           </Navbar>
         </Row>
+        </Container>
+        </div>
     </>
   );
 };
