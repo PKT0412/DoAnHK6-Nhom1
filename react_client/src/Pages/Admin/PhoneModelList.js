@@ -8,35 +8,41 @@ import TopNav from "./Component/TopNav";
 import Nav from "./Component/Nav";
 
 const PhoneModelList = () => {
-  const [product, setProduct] = useState([]);
-  const [show, setShow] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState({ brand: {} });
-  const handleClose = () => setShow(false);
-  const handleShow = (id) => {
-    setSelectedProduct(product.find((a) => a.id === id));
-    setShow(true);
+  const [phoneModels, setPhoneModels] = useState([]);
+  useEffect(() => {
+    getData();
+  }, []);
+  const getData = async () => {
+    const response = await fetch("https://localhost:7217/api/PhoneModels").then(
+      (response) => response.json()
+    );
+    setPhoneModels(response);
   };
+
   const handleDelete = (id) => {
     const shouldDelete = window.confirm(
       "Bạn có chắc chắn muốn xóa tài khoản này?"
     );
     if (shouldDelete) {
-      axiosClient.delete(
-        `https://localhost:7217/api/PhoneModels/${id}`
-          .then(() => {
-            setProduct(product.filter((item) => item.id !== id));
-          })
-          .catch((error) => {
-            console.error("Lỗi xóa :", error);
-          })
-      );
+      axiosClient
+        .delete(`https://localhost:7217/api/PhoneModels/${id}`)
+        .then(() => {
+          setPhoneModels(phoneModels.filter((item) => item.id !== id));
+        })
+        .catch((error) => {
+          console.error("Lỗi xóa: ", error);
+        });
     }
   };
-  useEffect(() => {
-    axiosClient
-      .get("https://localhost:7217/api/PhoneModels")
-      .then((res) => setProduct(res.data));
-  });
+
+  const [show, setShow] = useState(false);
+  const [selectedPhoneModel, setSelectedPhoneModel] = useState({ brand: {} });
+  const handleClose = () => setShow(false);
+  const handleShow = (id) => {
+    setSelectedPhoneModel(phoneModels.find((a) => a.id === id));
+    setShow(true);
+  };
+
   return (
     <div>
       <TopNav />
@@ -78,7 +84,7 @@ const PhoneModelList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {product.map((item) => (
+                      {phoneModels.map((item) => (
                         <tr>
                           <td>{item.id}</td>
                           <td>
@@ -136,7 +142,7 @@ const PhoneModelList = () => {
                           <Col md={4}>
                             <dd>
                               <img
-                                src={`https://localhost:7217/Image/PhoneModel/${selectedProduct.name}/${selectedProduct.image}`}
+                                src={`https://localhost:7217/Image/PhoneModel/${selectedPhoneModel.name}/${selectedPhoneModel.image}`}
                                 alt=""
                                 style={{ width: "100%" }}
                               />
@@ -145,36 +151,36 @@ const PhoneModelList = () => {
                           <Col md={4}>
                             <dl>
                               <dt>Name: </dt>
-                              <dd>{selectedProduct.name}</dd>
+                              <dd>{selectedPhoneModel.name}</dd>
                               <dt>Screen: </dt>
-                              <dd>{selectedProduct.screen}</dd>
+                              <dd>{selectedPhoneModel.screen}</dd>
                               <dt>OperatingSystem: </dt>
-                              <dd>{selectedProduct.operatingSystem}</dd>
+                              <dd>{selectedPhoneModel.operatingSystem}</dd>
                               <dt>RearCamera: </dt>
-                              <dd>{selectedProduct.rearCamera}</dd>
+                              <dd>{selectedPhoneModel.rearCamera}</dd>
                               <dt>FrontCamera: </dt>
-                              <dd>{selectedProduct.frontCamera}</dd>
+                              <dd>{selectedPhoneModel.frontCamera}</dd>
                               <dt>Chip: </dt>
-                              <dd>{selectedProduct.chip}</dd>
+                              <dd>{selectedPhoneModel.chip}</dd>
                             </dl>
                           </Col>
                           <Col md={4}>
                             <dl>
                               <dt>Sim: </dt>
-                              <dd>{selectedProduct.sim}</dd>
+                              <dd>{selectedPhoneModel.sim}</dd>
                               <dt>BatteryAndCharger: </dt>
-                              <dd>{selectedProduct.batteryAndCharger}</dd>
+                              <dd>{selectedPhoneModel.batteryAndCharger}</dd>
                               <dt>PhoneModelType: </dt>
-                              <dd>{selectedProduct.phoneModelType}</dd>
+                              <dd>{selectedPhoneModel.phoneModelType}</dd>
                               <dt>OldPrice: </dt>
-                              <dd>{selectedProduct.oldPrice}</dd>
+                              <dd>{selectedPhoneModel.oldPrice}</dd>
                               <dt>PromotionalPrice: </dt>
-                              <dd>{selectedProduct.promotionalPrice}</dd>
+                              <dd>{selectedPhoneModel.promotionalPrice}</dd>
                               <dt>BrandId: </dt>
-                              <dd>{selectedProduct.brand.name}</dd>
+                              <dd>{selectedPhoneModel.brand.name}</dd>
                               <dt>Status: </dt>
                               <dd>
-                                {selectedProduct.status === 0
+                                {selectedPhoneModel.status === 0
                                   ? " Không hoạt động"
                                   : "Hoạt động"}
                               </dd>

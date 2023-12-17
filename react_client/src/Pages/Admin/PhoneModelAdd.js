@@ -1,39 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import axiosClient from "../Component/axiosClient";
 import { Form, Button } from "react-bootstrap";
 import TopNav from "./Component/TopNav";
 import Nav from "./Component/Nav";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const PhoneModelAdd = () => {
-  const [product, setProduct] = useState({
-    product: "",
+  const [phoneModel, setPhoneModel] = useState({
+    starAverage: 0,
     status: true,
-    starAverage: false,
   });
+
+  const [brands, setBrands] = useState([]);
+  useEffect(() => {
+    getData();
+  }, []);
+  const getData = async () => {
+    const response = await fetch("https://localhost:7217/api/Brands").then(
+      (response) => response.json()
+    );
+    setBrands(response);
+  };
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    setProduct((prev) => ({ ...prev, [name]: value }));
-    setSelectedValue(e.target.value);
+    setPhoneModel((prev) => ({ ...prev, [name]: value }));
   };
   const handleCheck = (e) => {
     let name = e.target.name;
     let value = e.target.checked;
-    setProduct((prev) => ({ ...prev, [name]: value }));
+    setPhoneModel((prev) => ({ ...prev, [name]: value }));
   };
   const handleSubmit = (e) => {
     e.preventDefault();
     axiosClient
-      .post(`https://localhost:7217/api/PhoneModels`, product)
+      .post(`https://localhost:7217/api/PhoneModels`, phoneModel)
       .then(() => {
-        navigate("/products");
+        navigate("/admin/phonemodel");
       });
   };
-  const [selectedValue, setSelectedValue] = useState("");
+  console.log(phoneModel)
 
   return (
     <div>
@@ -54,7 +66,7 @@ const PhoneModelAdd = () => {
                 <li className="breadcrumb-item active">Add</li>
               </ol>
 
-              <Form className="col-md-4" onSubmit={handleSubmit}>
+              <Form className="col-md-4">
                 <Form.Group>
                   <Form.Label>Name:</Form.Label>
                   <Form.Control
@@ -72,7 +84,7 @@ const PhoneModelAdd = () => {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label>OperatingSystem:</Form.Label>
+                  <Form.Label>Operating System:</Form.Label>
                   <Form.Control
                     type="text"
                     name="operatingSystem"
@@ -80,15 +92,7 @@ const PhoneModelAdd = () => {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label>Price:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="price"
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>RearCamera:</Form.Label>
+                  <Form.Label>Rear Camera:</Form.Label>
                   <Form.Control
                     type="text"
                     name="rearCamera"
@@ -96,7 +100,7 @@ const PhoneModelAdd = () => {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label>FrontCamera:</Form.Label>
+                  <Form.Label>Front Camera:</Form.Label>
                   <Form.Control
                     type="text"
                     name="frontCamera"
@@ -128,7 +132,7 @@ const PhoneModelAdd = () => {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label>BatteryAndCharger:</Form.Label>
+                  <Form.Label>Battery And Charger:</Form.Label>
                   <Form.Control
                     type="text"
                     name="batteryAndCharger"
@@ -136,7 +140,7 @@ const PhoneModelAdd = () => {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label>PhoneModelType:</Form.Label>
+                  <Form.Label>PhoneModel Type:</Form.Label>
                   <Form.Control
                     type="text"
                     name="phoneModelType"
@@ -144,23 +148,7 @@ const PhoneModelAdd = () => {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label>PhoneModelType:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="phoneModelType"
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>OldPrice:</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="oldPrice"
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>OldPrice:</Form.Label>
+                  <Form.Label>Old Price:</Form.Label>
                   <Form.Control
                     type="number"
                     name="oldPrice"
@@ -184,20 +172,14 @@ const PhoneModelAdd = () => {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label>Image:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="image"
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <p>Chọn Brand: {selectedValue}</p>
-                  <select value={selectedValue} onChange={handleChange}>
-                    <option value="IPhone">1</option>
-                    <option value="SamSung">2</option>
-                    <option value="brandId">3</option>
-                  </select>
+                  <Form.Group>
+                    <Form.Label>Hãng:</Form.Label>
+                    <Form.Select name="brandId" custom onChange={handleChange}>
+                      {brands.map((item) => {
+                        return <option value={item.id}>{item.name}</option>;
+                      })}
+                    </Form.Select>
+                  </Form.Group>
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Status:</Form.Label>
@@ -206,13 +188,17 @@ const PhoneModelAdd = () => {
                     name="status"
                     label="Còn hoạt động"
                     onChange={handleCheck}
+                    checked
                   />
                 </Form.Group>
-                <div className="mt-2">
-                  <Button type="submit" variant="success">
-                    Thêm
-                  </Button>
-                </div>
+                <Button
+                  className="mt-3 mb-3"
+                  type="submit"
+                  variant="success"
+                  onClick={handleSubmit}
+                >
+                  <FontAwesomeIcon icon={faPlus} /> Thêm
+                </Button>
               </Form>
             </div>
           </main>

@@ -4,18 +4,17 @@ import axiosClient from "../Component/axiosClient";
 import TopNav from "./Component/TopNav";
 import Nav from "./Component/Nav";
 const BrandList = () => {
-  const [brand, setBrand] = useState([]);
-
+  const [brands, setBrands] = useState([]);
   useEffect(() => {
     getData();
   }, []);
-
   const getData = async () => {
     const response = await fetch("https://localhost:7217/api/Brands").then(
       (response) => response.json()
     );
-    setBrand(response);
+    setBrands(response);
   };
+
   const handleDelete = (id) => {
     const shouldDelete = window.confirm(
       "Bạn có chắc chắn muốn xóa tài khoản này?"
@@ -24,13 +23,14 @@ const BrandList = () => {
       axiosClient
         .delete(`https://localhost:7217/api/Brands/${id}`)
         .then(() => {
-          setBrand(brand.filter((item) => item.id !== id));
+          setBrands(brands.filter((item) => item.id !== id));
         })
         .catch((error) => {
           console.error("Lỗi xóa: ", error);
         });
     }
   };
+
   return (
     <div>
       <TopNav />
@@ -71,7 +71,7 @@ const BrandList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {brand.map((item) => {
+                      {brands.map((item) => {
                         return (
                           <tr>
                             <td>{item.id}</td>
@@ -130,4 +130,5 @@ const BrandList = () => {
     </div>
   );
 };
+
 export default BrandList;
