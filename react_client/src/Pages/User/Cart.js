@@ -74,17 +74,17 @@ const Cart = () => {
     <>
       <Header />
       {/* Phần điều hướng về trang sản phẩm */}
-      <li style={{ display: "inline", marginLeft: "15px" }}>
-        <Link to={"/"} style={{ color: "#515154" }}>
+      <h5 style={{ display: "inline", marginLeft: "15px" }}>
+        <Link to={"/"} style={{ color: "#515154", textDecoration: "none" }}>
           Trang chủ
         </Link>
-      </li>
+      </h5>
       <span>|</span>
-      <li style={{ display: "inline" }}>
-        <Link to={"/Cart"} style={{ color: "#515154" }}>
+      <h5 style={{ display: "inline" }}>
+        <Link to={"/Cart"} style={{ color: "#515154", textDecoration: "none" }}>
           Giỏ hàng
         </Link>
-      </li>
+      </h5>
       {/*  Thêm sản phẩm vào giỏ hàng */}
       <Modal.Body>
         <Row>
@@ -93,7 +93,8 @@ const Cart = () => {
             style={{
               borderRadius: "12px",
               border: "1px solid",
-              marginBottom: "10px",
+              marginTop: "10px",
+              marginLeft: "40px",
             }}
           >
             <Table>
@@ -210,8 +211,9 @@ const Cart = () => {
               borderRadius: "12px",
               border: "1px solid",
               marginBottom: "10px",
-              marginLeft: "10px",
-              height: "300px",
+              marginLeft: "20px",
+              height: "320px",
+              marginTop: "10px",
             }}
           >
             <div className="coupon-code" style={{ padding: "10px" }}>
@@ -233,6 +235,7 @@ const Cart = () => {
                   <li key={item.id}>{item.name}</li>
                 ))}
               </ul>
+              <p>Tổng phụ: {totalPrice}</p>
               <p>Tổng tiền: {totalPrice}</p>
             </div>
             <Link to={"/pay"}>
@@ -243,6 +246,39 @@ const Cart = () => {
           </Col>
         </Row>
       </Modal.Body>
+      <div
+        style={{
+          border: "1px solid",
+          borderRadius: "12px",
+          width: "1400px",
+          marginTop: "25px",
+          marginLeft: "25px",
+        }}
+      >
+        <h3>Đăng ký nhận tin từ ShopDunk</h3>
+        <p style={{ marginLeft: "530px" }}>
+          Thông tin sản phẩm mới nhất và chương trình khuyến mãi
+        </p>
+        <InputGroup
+          className="mb-3"
+          style={{ width: "450px", marginLeft: "520px" }}
+        >
+          <Form.Control
+            placeholder="Email của bạn"
+            aria-label="Voucher"
+            aria-describedby="basic-addon2"
+          />
+          <Link to={"/Register"}>
+            <Button
+              variant="primary"
+              id="basic-addon2"
+              style={{ borderRadius: "8px" }}
+            >
+              Đăng ký
+            </Button>
+          </Link>
+        </InputGroup>
+      </div>
       <Footer />
     </>
   );
