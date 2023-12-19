@@ -21,7 +21,7 @@ const PhoneModelList = () => {
 
   const handleDelete = (id) => {
     const shouldDelete = window.confirm(
-      "Bạn có chắc chắn muốn xóa tài khoản này?"
+      "Bạn có chắc chắn muốn xóa dòng điện thoại này?"
     );
     if (shouldDelete) {
       axiosClient

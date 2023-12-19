@@ -84,6 +84,7 @@ const BrandAdd = () => {
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
+                  <Form.Label>Status:</Form.Label>
                   <Form.Check
                     type="switch"
                     name="status"

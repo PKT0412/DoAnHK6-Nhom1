@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_Server.Data;
 using API_Server.Models;
+using Microsoft.Extensions.Hosting;
+using System.Drawing.Drawing2D;
 
 namespace API_Server.Controllers
 {
@@ -15,10 +17,12 @@ namespace API_Server.Controllers
     public class PhoneModelsController : ControllerBase
     {
         private readonly API_ServerContext _context;
+        private readonly IWebHostEnvironment _environment;
 
-        public PhoneModelsController(API_ServerContext context)
+        public PhoneModelsController(API_ServerContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         // GET: api/PhoneModels
@@ -64,7 +68,7 @@ namespace API_Server.Controllers
         // PUT: api/PhoneModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPhoneModel(int id, PhoneModel phoneModel)
+        public async Task<IActionResult> PutPhoneModel([FromForm] int id, [FromForm] PhoneModel phoneModel)
         {
             if (id != phoneModel.Id)
             {
@@ -75,6 +79,31 @@ namespace API_Server.Controllers
 
             try
             {
+                if (phoneModel.ImageFile != null && phoneModel.ImageFile.Length > 0)
+                {
+                    var fileName = phoneModel.ImageFile.FileName;
+                    var folderName = phoneModel.Name; // Lấy tên folder từ phoneModel.name
+
+                    var imagePath = Path.Combine(_environment.WebRootPath, "Image", "PhoneModel", folderName);
+                    Directory.CreateDirectory(imagePath); // Tạo thư mục nếu chưa tồn tại
+
+                    var uploadPath = Path.Combine(imagePath, fileName);
+                    using (var fileStream = new FileStream(uploadPath, FileMode.Create))
+                    {
+                        await phoneModel.ImageFile.CopyToAsync(fileStream);
+                    }
+                    //Xóa ảnh cũ
+                    var oldImagePath = Path.Combine(_environment.WebRootPath, "Image", "PhoneModel", folderName, phoneModel.Image);
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+
+                    // Lưu đường dẫn hình ảnh vào trường Image
+                    phoneModel.Image = phoneModel.ImageFile.FileName;
+                }
+
+                _context.PhoneModels.Update(phoneModel);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -95,8 +124,26 @@ namespace API_Server.Controllers
         // POST: api/PhoneModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<PhoneModel>> PostPhoneModel(PhoneModel phoneModel)
+        public async Task<ActionResult<PhoneModel>> PostPhoneModel([FromForm] PhoneModel phoneModel)
         {
+            if (phoneModel.ImageFile != null && phoneModel.ImageFile.Length > 0)
+            {
+                var fileName = phoneModel.ImageFile.FileName;
+                var folderName = phoneModel.Name; // Lấy tên folder từ phoneModel.name
+
+                var imagePath = Path.Combine(_environment.WebRootPath, "Image", "PhoneModel", folderName);
+                Directory.CreateDirectory(imagePath); // Tạo thư mục nếu chưa tồn tại
+
+                var uploadPath = Path.Combine(imagePath, fileName);
+                using (var fileStream = new FileStream(uploadPath, FileMode.Create))
+                {
+                    await phoneModel.ImageFile.CopyToAsync(fileStream);
+                }
+
+                // Lưu đường dẫn hình ảnh vào trường Image
+                phoneModel.Image = phoneModel.ImageFile.FileName;
+            }
+
             _context.PhoneModels.Add(phoneModel);
             await _context.SaveChangesAsync();
 

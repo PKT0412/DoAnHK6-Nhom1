@@ -7,12 +7,17 @@ import Nav from "./Component/Nav";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 const PhoneModelAdd = () => {
   const [phoneModel, setPhoneModel] = useState({
+    ImageFile: null,
     starAverage: 0,
+    brandId: 1,
     status: true,
   });
+
+  const navigate = useNavigate();
 
   const [brands, setBrands] = useState([]);
   useEffect(() => {
@@ -25,8 +30,6 @@ const PhoneModelAdd = () => {
     setBrands(response);
   };
 
-  const navigate = useNavigate();
-
   const handleChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
@@ -37,15 +40,27 @@ const PhoneModelAdd = () => {
     let value = e.target.checked;
     setPhoneModel((prev) => ({ ...prev, [name]: value }));
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axiosClient
-      .post(`https://localhost:7217/api/PhoneModels`, phoneModel)
+  const handleImageChange = (e) => {
+    setPhoneModel((prev) => ({ ...prev, ImageFile: e.target.files[0] }));
+  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    Object.entries(phoneModel).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    axios
+      .post(`https://localhost:7217/api/PhoneModels`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then(() => {
-        navigate("/admin/phonemodel");
+        navigate("/admin/phoneModel");
       });
   };
-  console.log(phoneModel)
 
   return (
     <div>
@@ -164,11 +179,11 @@ const PhoneModelAdd = () => {
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label>Image:</Form.Label>
+                  <Form.Label>Ảnh</Form.Label>
                   <Form.Control
-                    type="text"
-                    name="image"
-                    onChange={handleChange}
+                    type="file"
+                    name="ImageFile"
+                    onChange={handleImageChange}
                   />
                 </Form.Group>
                 <Form.Group>
