@@ -166,17 +166,17 @@ const PhoneDetailPage = () => {
               <Col md={12}>
                 <div className="slider-container">
                   <Slider {...SettingsSlider} ref={sliderRef}>
-                    {phoneModelImages.map((image, index) => (
-                      <div key={image.id} className="slider-item">
+                    {phoneModelImages.map((item, index) => (
+                      <div key={item.id} className="slider-item">
                         <Image
-                          src={`https://localhost:7217/Image/PhoneModel/${phoneModel.name}/${image.path}`}
+                          src={`https://localhost:7217/Image/PhoneModel/${phoneModel.name}/${item.image}`}
                           alt="Hình nhỏ"
                           className="small-image"
                           thumbnail
                           onClick={() =>
-                            handleThumbnailClick(image.path, index)
+                            handleThumbnailClick(item.image, index)
                           }
-                          onMouseEnter={() => setHoveredImage(image.path)}
+                          onMouseEnter={() => setHoveredImage(item.image)}
                           onMouseLeave={() => setHoveredImage("")}
                         />
                       </div>

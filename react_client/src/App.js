@@ -15,7 +15,12 @@ import PhoneModelByBrand from "./Pages/User/PhoneModelByBrand";
 import PhoneModelList from "./Pages/Admin/PhoneModelList";
 import PhoneModelAdd from "./Pages/Admin/PhoneModelAdd";
 import PhoneModelEdit from "./Pages/Admin/PhoneModelEdit";
-
+import PhoneList from "./Pages/Admin/PhoneList";
+import PhoneAdd from "./Pages/Admin/PhoneAdd";
+import PhoneEdit from "./Pages/Admin/PhoneEdit";
+import PhoneModelImageList from "./Pages/Admin/PhoneModelImageList";
+import PhoneModelImageAdd from "./Pages/Admin/PhoneModelImageAdd";
+import PhoneModelImageEdit from "./Pages/Admin/PhoneModelImageEdit";
 
 const App = () => {
   return (
@@ -39,6 +44,12 @@ const App = () => {
           <Route path="/Admin/PhoneModel" element={<PhoneModelList />}/>
           <Route path="/Admin/PhoneModel/Add" element={<PhoneModelAdd />} />
           <Route path="/Admin/PhoneModel/Edit/:id" element={<PhoneModelEdit />} />
+          <Route path="/Admin/Phone/:PhoneModelId" element={<PhoneList />}/>
+          <Route path="/Admin/Phone/:PhoneModelId/Add" element={<PhoneAdd />}/>
+          <Route path="/Admin/Phone/Edit/:id" element={<PhoneEdit />}/>
+          <Route path="/Admin/PhoneModelImage/:PhoneModelId" element={<PhoneModelImageList />}/>
+          <Route path="/Admin/PhoneModelImage/:PhoneModelId/Add" element={<PhoneModelImageAdd />}/>
+          <Route path="/Admin/PhoneModelImage/Edit/:id" element={<PhoneModelImageEdit />}/>
         </Routes>
       </BrowserRouter>
     </>

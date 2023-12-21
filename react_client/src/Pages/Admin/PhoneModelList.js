@@ -126,6 +126,20 @@ const PhoneModelList = () => {
                                   icon={faTrash}
                                 ></FontAwesomeIcon>
                               </button>
+                              <Link
+                                to={`/Admin/Phone/${item.id}`}
+                                className="btn btn-success"
+                                style={{ marginRight: "5px" }}
+                              >
+                                DS điện thoại
+                              </Link>
+                              <Link
+                                to={`/Admin/PhoneModelImage/${item.id}`}
+                                className="btn btn-success"
+                                style={{ marginRight: "5px" }}
+                              >
+                                DS hình
+                              </Link>
                             </div>
                           </td>
                         </tr>

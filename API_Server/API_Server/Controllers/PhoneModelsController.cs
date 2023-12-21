@@ -159,6 +159,12 @@ namespace API_Server.Controllers
             {
                 return NotFound();
             }
+            // Xóa thư mục ảnh
+            var imagePath = Path.Combine(_environment.WebRootPath, "Image", "PhoneModel", phoneModel.Name);
+            if (Directory.Exists(imagePath))
+            {
+                Directory.Delete(imagePath, true);
+            }
 
             _context.PhoneModels.Remove(phoneModel);
             await _context.SaveChangesAsync();
