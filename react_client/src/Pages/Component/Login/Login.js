@@ -3,6 +3,7 @@ import { Form, Button, Container, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import Header from '../Header/Header.js';
+import Footer from '../Footer/Footer.js';
 import { useCookies } from 'react-cookie';
 
 const Login = (props) => {
@@ -108,7 +109,7 @@ const Login = (props) => {
           
         </Form>
       </Container>
-      
+      <Footer></Footer>
     </>
   );
 };

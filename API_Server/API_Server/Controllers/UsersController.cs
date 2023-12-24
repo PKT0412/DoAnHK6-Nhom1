@@ -112,7 +112,8 @@ namespace API_Server.Controllers
                 PhoneNumber = admin.PhoneNumber,
 
             };
-            var result = await _userManager.CreateAsync(user, admin.Password);
+            var result = await _userManager.CreateAsync(user, admin.
+                Password);
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError);
 

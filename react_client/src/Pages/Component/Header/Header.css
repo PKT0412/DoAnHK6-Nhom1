@@ -18,6 +18,10 @@ h3{
   color: gray;
 }
 
+.LinkHeader > .shopping-icon .favorite-icon:hover {
+  color: red;
+}
+
 .logo-image{
   width: 20%;
 }
@@ -28,4 +32,7 @@ h3{
 .header{
   background: #515154;
 }
+
+
+
 

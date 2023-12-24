@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import Header from '../Header/Header';
+import Footer from '../Footer/Footer.js';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
@@ -36,6 +37,7 @@ const Register = () => {
   return (
     <>
       <Header></Header>
+      <div  >
       <Container className="d-flex justify-content-center align-items-center">
         <Form onSubmit={handleRegister} className="w-50 p-4 rounded bg-light">
           <h3 className="mb-4 text-center">Đăng ký</h3>
@@ -151,6 +153,9 @@ const Register = () => {
           </Col>
         </Form>
       </Container>
+      </div >
+      <Footer></Footer>
+
     </>
   );
 };

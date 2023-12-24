@@ -53,13 +53,13 @@ const Header = () => {
               </Form>
             </Col>
             <Col xs lg="2" className="d-flex justify-content-center">
-              <Link to="/shopping-bag" className='LinkHeader'>
-                <FontAwesomeIcon icon={faShoppingBag} className="shopping-icon" />
+              <Link to="/Cart" className='LinkHeader'>
+                <FontAwesomeIcon icon={faShoppingBag} className="icon" />
               </Link>
             </Col>
             <Col xs lg="1" className="d-flex justify-content-center">
-              <Link to="/favorites" className='LinkHeader'>
-                <FontAwesomeIcon icon={faHeart} className="favorite-icon" />
+              <Link to="/Wishlist" className='LinkHeader'>
+                <FontAwesomeIcon icon={faHeart} className="icon" />
               </Link>
             </Col>
             <Col xs lg="2" className="d-flex justify-content-end">
