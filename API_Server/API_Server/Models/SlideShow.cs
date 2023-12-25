@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API_Server.Models
 {
@@ -6,12 +7,10 @@ namespace API_Server.Models
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string Image { get; set; }
 
-        public string Path { get; set; }
-
-        [DefaultValue(0)]
-        public int Numerical { get; set; }
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
 
         [DefaultValue(true)]
         public bool Status { get; set; }
@@ -23,7 +22,6 @@ namespace API_Server.Models
         public SlideShow()
         {
             Status = true;
-            Numerical = 0;
         }
     }
 }

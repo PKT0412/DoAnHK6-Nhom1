@@ -95,7 +95,7 @@ const Home = () => {
                 >
                   <Image
                     className="slideshow-img"
-                    src={`https://localhost:7217/Image/SlideShow/${slideshow.path}`}
+                    src={`https://localhost:7217/Image/SlideShow/${slideshow.image}`}
                     alt={slideshow.id}
                   />
                 </Carousel.Item>

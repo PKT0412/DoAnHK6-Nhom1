@@ -3,34 +3,33 @@ import { useState, useEffect } from "react";
 import axiosClient from "../Component/axiosClient";
 import TopNav from "./Component/TopNav";
 import Nav from "./Component/Nav";
-const BrandList = () => {
-  const [brand, setBrand] = useState([]);
 
+const BrandList = () => {
+  const [brands, setBrands] = useState([]);
   useEffect(() => {
     getData();
   }, []);
-
   const getData = async () => {
     const response = await fetch("https://localhost:7217/api/Brands").then(
       (response) => response.json()
     );
-    setBrand(response);
+    setBrands(response);
   };
+
   const handleDelete = (id) => {
-    const shouldDelete = window.confirm(
-      "Bạn có chắc chắn muốn xóa tài khoản này?"
-    );
+    const shouldDelete = window.confirm("Bạn có chắc chắn muốn xóa hãng này?");
     if (shouldDelete) {
       axiosClient
         .delete(`https://localhost:7217/api/Brands/${id}`)
         .then(() => {
-          setBrand(brand.filter((item) => item.id !== id));
+          setBrands(brands.filter((item) => item.id !== id));
         })
         .catch((error) => {
           console.error("Lỗi xóa: ", error);
         });
     }
   };
+
   return (
     <div>
       <TopNav />
@@ -53,7 +52,7 @@ const BrandList = () => {
               <Link to="/Admin/Brand/Add" className="btn btn-success mb-2">
                 <i className="fas fa-plus" /> Thêm
               </Link>
-              
+
               <div className="card mb-4">
                 <div className="card-header">
                   <i className="fas fa-table me-1" />
@@ -71,7 +70,7 @@ const BrandList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {brand.map((item) => {
+                      {brands.map((item) => {
                         return (
                           <tr>
                             <td>{item.id}</td>
@@ -130,4 +129,5 @@ const BrandList = () => {
     </div>
   );
 };
+
 export default BrandList;
