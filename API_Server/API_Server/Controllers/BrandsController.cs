@@ -130,6 +130,12 @@ namespace API_Server.Controllers
             {
                 return NotFound();
             }
+            //Xóa ảnh cũ
+            var oldImagePath = Path.Combine(_environment.WebRootPath, "Image", "Brand", brand.Image);
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
 
             _context.Brands.Remove(brand);
             await _context.SaveChangesAsync();

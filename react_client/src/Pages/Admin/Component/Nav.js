@@ -30,6 +30,12 @@ const Nav = () => {
                     </div>
                     Dòng điện thoại
                   </a>
+                  <a className="nav-link" href="/Admin/SlideShow">
+                    <div className="sb-nav-link-icon">
+                      <i className="fas fa-table" />
+                    </div>
+                    Banner quảng cáo
+                  </a>
                 </div>
               </div>
 

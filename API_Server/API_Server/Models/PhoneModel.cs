@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API_Server.Models
 {
@@ -31,6 +32,9 @@ namespace API_Server.Models
         public int PromotionalPrice { get; set; }
 
         public string Image { get; set; }
+
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
 
         public double StarAverage { get; set; }
 
