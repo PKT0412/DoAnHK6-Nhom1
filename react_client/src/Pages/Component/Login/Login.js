@@ -42,10 +42,8 @@ const Login = (props) => {
       })
       .then((response) => {
         const token = response.data.token;
-
         // Lưu token vào cookie
         setCookie('token', token, { path: '/' });
-
         // Kiểm tra trạng thái đăng nhập sau khi đăng nhập thành công
         checkLoginStatus();
       })
@@ -101,7 +99,7 @@ const Login = (props) => {
           <Col className="d-flex justify-content-center">
             <p className="text-center">
               Chưa có tài khoản?{' '}
-              <a href="/Signup" className="text-decoration-none color-black" style={{ color: 'gray' }}>
+              <a href="/register" className="text-decoration-none color-black" style={{ color: 'gray' }}>
                 Đăng ký tài khoản
               </a>
             </p>

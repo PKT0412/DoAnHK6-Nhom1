@@ -1,14 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Image,
-  Button,
-  Card,
-  Form,
-} from "react-bootstrap";
-import { useParams } from "react-router";
+import {Container,Row,Col,Image,Button,Card,} from "react-bootstrap";
+import { useNavigate, useParams } from "react-router";
 import axiosClient from "../Component/axiosClient";
 import "./css/PhoneDetail.css";
 import Header from "../Component/Header/Header";
@@ -18,7 +10,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import axios from "axios";
 
 const PhoneDetailPage = () => {
   const SettingsSlider = {
@@ -53,6 +45,7 @@ const PhoneDetailPage = () => {
   // useEffect(() => {
   //   axiosClient.get(`/Phones`).then((res) => setPhones(res.data));
   // }, []);
+
 
   const [colorPhones, setColorPhones] = useState([]);
   useEffect(() => {
@@ -93,6 +86,8 @@ const PhoneDetailPage = () => {
     }
   }, [storagePhones]);
 
+
+
   const fetchPhoneByColorAndStorage = async () => {
     try {
       const response = await axiosClient.get(
@@ -132,8 +127,6 @@ const PhoneDetailPage = () => {
     fetchPhoneModelImages();
   }, [phoneModel.id]);
 
-  const [quantity, setQuantity] = useState(1);
-
   const reviewData = [
     { user: "Nguyen Van A", rating: 4, comment: "Sản phẩm tuyệt vời!" },
     {
@@ -142,6 +135,30 @@ const PhoneDetailPage = () => {
       comment: "Rất hài lòng với sản phẩm này.",
     },
   ];
+
+  const navigate = useNavigate();
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    const newCartItem = {
+      quantity: 1,
+      status: true,
+      userId: "5aae4bbb-a945-4467-93b6-261110cc88e7",
+      phoneId: phoneByColorAndStorage.id
+    };
+  
+    axios.post('https://localhost:7217/api/Carts', newCartItem)
+      .then(() => {
+        navigate('/cart');
+      })
+      .catch((error) => {
+        // Handle error
+        console.error('Failed to add item to cart:', error);
+      });
+      console.log(newCartItem);
+  };
+
+
 
   return (
     <>
@@ -153,9 +170,8 @@ const PhoneDetailPage = () => {
             {/* Hình lớn */}
             <div className="large-image-container">
               <Image
-                src={`https://localhost:7217/Image/PhoneModel/${
-                  phoneModel.name
-                }/${hoveredImage || largeImage}`}
+                src={`https://localhost:7217/Image/PhoneModel/${phoneModel.name
+                  }/${hoveredImage || largeImage}`}
                 fluid
                 className="large-image"
               />
@@ -203,120 +219,114 @@ const PhoneDetailPage = () => {
           </Col>
 
           <Col md={5} className="phone-info">
-            {/* Thông tin sản phẩm */}
-            <h2 className="name">{phoneByColorAndStorage.name}</h2>
-            <p className="price">
-              {phoneByColorAndStorage.price.toLocaleString()}đ
-            </p>
-            <hr />
-            {/* Chọn dung lượng */}
-            <div>
-              {storagePhones.map((item) => {
-                return (
-                  <>
-                    <Button
-                      className="button-storage"
-                      key={item}
-                      variant={
-                        selectedStorage === item
-                          ? "secondary"
-                          : "outline-secondary"
-                      }
-                      onClick={() => setSelectedStorage(item)}
-                    >
-                      {item}
-                    </Button>
-                  </>
-                );
-              })}
-            </div>
+          <div key={phoneByColorAndStorage.id}>
+            <Row>
+              {/* Thông tin sản phẩm */}
+              <h2 className="name">{phoneByColorAndStorage.name}</h2>
+              <p className="price">
+                {phoneByColorAndStorage.price.toLocaleString()}đ
+              </p>
+              <hr />
+              {/* Chọn dung lượng */}
+              <div>
+                {storagePhones.map((item) => {
+                  return (
+                    <>
+                      <Button
+                        className="button-storage"
+                        key={item}
+                        variant={
+                          selectedStorage === item
+                            ? "secondary"
+                            : "outline-secondary"
+                        }
+                        onClick={() => setSelectedStorage(item)}
+                      >
+                        {item}
+                      </Button>
+                    </>
+                  );
+                })}
+              </div>
 
-            {/* Chọn màu */}
-            <div>
-              {colorPhones.map((item) => {
-                return (
-                  <>
-                    <Button
-                      className="button-color"
-                      key={item}
-                      variant={
-                        selectedColor === item
-                          ? "secondary"
-                          : "outline-secondary"
-                      }
-                      onClick={() => setSelectedColor(item)}
-                    >
-                      {item}
-                    </Button>
-                  </>
-                );
-              })}
-            </div>
-
-            <Form.Group controlId="quantity" className="quantity">
-              <Form.Label>Số lượng:</Form.Label>
-              <Form.Control
-                className="quantity-control"
-                type="number"
-                min="1"
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value))}
-                size="sm"
-              />
-            </Form.Group>
-            
-              {/* Nút thêm vào giỏ hàng thay bằng link to của reactjs  */}
-              <Link to="/Cart">
-                <Button variant="primary" className="button-add-cart">
-              <FontAwesomeIcon icon={faPlus} /> Thêm vào giỏ hàng
-            </Button>
-            </Link>
-
-            {/* Nút thêm vào giỏ hàng */}
-            {/* <Button variant="primary" className="button-add-cart">
+              {/* Chọn màu */}
+              <div>
+                {colorPhones.map((item) => {
+                  return (
+                    <>
+                      <Button
+                        className="button-color"
+                        key={item}
+                        variant={
+                          selectedColor === item
+                            ? "secondary"
+                            : "outline-secondary"
+                        }
+                        onClick={() => setSelectedColor(item)}
+                      >
+                        {item}
+                      </Button>
+                    </>
+                  );
+                })}
+              </div>
+            </Row>
+            <Row>
+              {/* <Button variant="primary" className="button-add-cart">
               <FontAwesomeIcon icon={faPlus} /> Thêm vào giỏ hàng
             </Button> */}
+              <Button
+                variant="primary"
+                className="button-add-cart"
+                onClick={handleAddToCart}
+              >
+                <FontAwesomeIcon icon={faPlus} /> Thêm vào giỏ hàng
+              </Button>
+            </Row>
+            <Row>
+              <Card className="detailed-configuration">
+                <Card.Title>
+                  Cấu hình Điện thoại {phoneByColorAndStorage.name}
+                </Card.Title>
+                <Card.Body>
+                  <Card.Text>
+                    <b>Màn hình:</b> {phoneModel.screen}
+                  </Card.Text>
+                  <Card.Text>
+                    <b>Hệ điều hành:</b> {phoneModel.operatingSystem}
+                  </Card.Text>
+                  <Card.Text>
+                    <b>Camera sau:</b> {phoneModel.rearCamera}
+                  </Card.Text>
+                  <Card.Text>
+                    <b>Camera trước:</b> {phoneModel.frontCamera}
+                  </Card.Text>
+                  <Card.Text>
+                    <b>Chip:</b> {phoneModel.chip}
+                  </Card.Text>
+                  <Card.Text>
+                    <b>RAM:</b> {phoneModel.ram}
+                  </Card.Text>
+                  <Card.Text>
+                    <b>Dung lượng lưu trữ:</b> {phoneByColorAndStorage.storage}
+                  </Card.Text>
+                  <Card.Text>
+                    <b>Màu:</b> {phoneByColorAndStorage.color}
+                  </Card.Text>
+                  <Card.Text>
+                    <b>SIM:</b> {phoneModel.sim}
+                  </Card.Text>
+                  <Card.Text>
+                    <b>Pin, Sạc:</b> {phoneModel.batteryAndCharger}
+                  </Card.Text>
+                  <Card.Text>
+                    <b>Hãng:</b> {phoneModel.brand.name}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Row>
+            </div>
 
-            <Card className="detailed-configuration">
-              <Card.Title>
-                Cấu hình Điện thoại {phoneByColorAndStorage.name}
-              </Card.Title>
-              <Card.Body>
-                <Card.Text>
-                  <b>Màn hình:</b> {phoneModel.screen}
-                </Card.Text>
-                <Card.Text>
-                  <b>Hệ điều hành:</b> {phoneModel.operatingSystem}
-                </Card.Text>
-                <Card.Text>
-                  <b>Camera sau:</b> {phoneModel.rearCamera}
-                </Card.Text>
-                <Card.Text>
-                  <b>Camera trước:</b> {phoneModel.frontCamera}
-                </Card.Text>
-                <Card.Text>
-                  <b>Chip:</b> {phoneModel.chip}
-                </Card.Text>
-                <Card.Text>
-                  <b>RAM:</b> {phoneModel.ram}
-                </Card.Text>
-                <Card.Text>
-                  <b>Dung lượng lưu trữ:</b> {phoneByColorAndStorage.storage}
-                </Card.Text>
-                <Card.Text>
-                  <b>Màu:</b> {phoneByColorAndStorage.color}
-                </Card.Text>
-                <Card.Text>
-                  <b>SIM:</b> {phoneModel.sim}
-                </Card.Text>
-                <Card.Text>
-                  <b>Pin, Sạc:</b> {phoneModel.batteryAndCharger}
-                </Card.Text>
-                <Card.Text>
-                  <b>Hãng:</b> {phoneModel.brand.name}
-                </Card.Text>
-              </Card.Body>
-            </Card>
           </Col>
         </Row>
       </Container>

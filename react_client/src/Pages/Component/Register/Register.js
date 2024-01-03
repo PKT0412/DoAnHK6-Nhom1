@@ -24,6 +24,7 @@ const Register = () => {
 
     axios.post(`https://localhost:7217/api/Users/register`, user)
       .then(() => {
+        alert('Đăng ký thành công.');
         navigate("/login");
       })
       .catch(error => {
@@ -56,7 +57,7 @@ const Register = () => {
             <Form.Label>Mật khẩu</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Nhập mật khẩu"
+              placeholder="Nhập mật khẩu "
               name="password"
               onChange={handleChange}
             />
@@ -146,7 +147,7 @@ const Register = () => {
           <Col className="d-flex justify-content-center">
             <p className="text-center">
               Đã có tài khoản?{' '}
-              <a href="/Signin" className="text-decoration-none color-black" style={{ color: 'gray' }}>
+              <a href="/login" className="text-decoration-none color-black" style={{ color: 'gray' }}>
                 Đăng nhập
               </a>
             </p>

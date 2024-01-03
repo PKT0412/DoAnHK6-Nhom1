@@ -25,7 +25,10 @@ namespace API_Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cart>>> GetCarts()
         {
-            return await _context.Carts.ToListAsync();
+            return await _context.Carts
+                                 .Include(C => C.Phone)
+                                 .ThenInclude(c => c.PhoneModel)
+                                 .ToListAsync();
         }
 
         // GET: api/Carts/5
