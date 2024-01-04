@@ -21,8 +21,8 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   // Lấy ra userID
-  const [userId, setUserId] = useState(null);
-  const navigate = useNavigate();
+  // const [userId, setUserId] = useState(null);
+  // const navigate = useNavigate();
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -46,7 +46,7 @@ const Home = () => {
   //   };
   //   fetchData();
   // });
-  // Viết logic để trích xuất userId từ chuỗi sang cookie
+  // // Viết logic để trích xuất userId từ chuỗi sang cookie
   // const getUserIdFromCookie = (cookie) => {
   //   const match = cookie.match(/userId=([^;]+)/);
   //   return match ? match[1] : null;
@@ -94,22 +94,22 @@ const Home = () => {
   //   }
   // };
   // Add to favorite
-  const addToWishList = async (phoneModelId) => {
-    if (userId) {
-      try {
-        await axiosClient.post(`https://localhost:7217/api/WishLists`, {
-          userId: userId,
-          phoneModelId: phoneModelId,
-        });
-        alert("Sản phẩm đã được yêu thích");
-      } catch (error) {
-        console.error("Lỗi khi yêu thích sản phẩm", error);
-      }
-    } else {
-      alert("Bạn cần đăng nhập để chọn sản phẩm yêu thích");
-      window.location.href = "/Login";
-    }
-  };
+  // const addToWishList = async (phoneModelId) => {
+  //   if (userId) {
+  //     try {
+  //       await axiosClient.post(`https://localhost:7217/api/WishLists`, {
+  //         userId: userId,
+  //         phoneModelId: phoneModelId,
+  //       });
+  //       alert("Sản phẩm đã được yêu thích");
+  //     } catch (error) {
+  //       console.error("Lỗi khi yêu thích sản phẩm", error);
+  //     }
+  //   } else {
+  //     alert("Bạn cần đăng nhập để chọn sản phẩm yêu thích");
+  //     window.location.href = "/Login";
+  //   }
+  // };
 
   //Sắp xếp phonemodel theo giá
   const [selectedPrice, setSelectedPrice] = useState("decrease");
@@ -228,7 +228,7 @@ const Home = () => {
                         <Link
                           to={""}
                           className="favorite-button"
-                          onClick={addToWishList}
+                          // onClick={handleWishList}
                         >
                           <FontAwesomeIcon icon={faHeart} />
                         </Link>

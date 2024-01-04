@@ -11,7 +11,7 @@ using System.Text;
 
 namespace API_Server.Controllers
 {
-    [Authorize]
+
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase

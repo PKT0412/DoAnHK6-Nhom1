@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_Server.Data;
 using API_Server.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API_Server.Controllers
 {
+    [Authorize]   
     [Route("api/[controller]")]
     [ApiController]
     public class WishListsController : ControllerBase
