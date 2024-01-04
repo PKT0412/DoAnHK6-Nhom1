@@ -28,6 +28,20 @@ namespace API_Server.Controllers
             return await _context.WishLists.ToListAsync();
         }
 
+        // GET: api/WishLists/User
+        [HttpGet]
+        [Route("GetWishListByuUser/{userId}")]
+
+        public async Task<ActionResult<IEnumerable<WishList>>> GetWishListByUser(string userId)
+        {
+            var wishlist = await _context.WishLists.Include(c=>c.Phone)
+                .ThenInclude(p=>p.PhoneModel)
+                .Where(c => c.UserId == userId).ToListAsync();
+
+
+            return wishlist;
+        }
+
         // GET: api/WishLists/5
         [HttpGet("{id}")]
         public async Task<ActionResult<WishList>> GetWishList(int id)

@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SQLitePCL;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace API_Server.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -24,6 +26,19 @@ namespace API_Server.Controllers
             _roleManager = roleManager;
             _configuration = configuration;
         }
+
+        [HttpGet]
+        [Route("api/[controller]")]
+        public async Task<IActionResult> GetuserId()
+        {
+            if(User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirst("UserId")?.Value;
+                return Ok(userId);  
+            }
+            return Unauthorized();  
+        }
+
 
         [HttpPost]
         [Route("login")]

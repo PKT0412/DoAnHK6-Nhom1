@@ -12,13 +12,46 @@ import {
 } from "react-bootstrap";
 import "./css/HomeAndPhoneModelByBrand.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import Header from '../Component/Header/Header.js';
+import { faHand, faHeart } from "@fortawesome/free-solid-svg-icons";
+import Header from "../Component/Header/Header.js";
 import axiosClient from "../Component/axiosClient";
 import Footer from "../Component/Footer/Footer";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  // Lấy ra userID
+  const [userId, setUserId] = useState(null);
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axiosClient.get(
+  //         `https://localhost:7217/api/Users/api/Users`
+  //       );
+
+  //       // Lấy userId từ cookies trong header response
+  //       const cookies = response.headers["set-cookie"];
+  //       const userIdCookie = cookies.find((cookie) =>
+  //         cookie.includes("userId")
+  //       );
+  //       if (userIdCookie) {
+  //         const userId = getUserIdFromCookie(userIdCookie);
+  //         setUserId(userId);
+  //       }
+  //     } catch (error) {
+  //       console.log("Error:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // });
+  // Viết logic để trích xuất userId từ chuỗi sang cookie
+  // const getUserIdFromCookie = (cookie) => {
+  //   const match = cookie.match(/userId=([^;]+)/);
+  //   return match ? match[1] : null;
+  // };
+
   const [slideshows, setSlideshows] = useState([]);
   useEffect(() => {
     axiosClient.get(`/SlideShows`).then((res) => setSlideshows(res.data));
@@ -33,6 +66,50 @@ const Home = () => {
   useEffect(() => {
     axiosClient.get(`/Brands`).then((res) => setBrands(res.data));
   }, []);
+
+  // Add to Wishlist
+  // const [exWishList, setExWishList] = useState([]);
+  // useEffect(() => {
+  //   axiosClient
+  //     .get(`https://localhost:7217/api/WishLists/GetWishListByuUser/${userId}`)
+  //     .then((res) => setExWishList(res.data));
+  // }, [userId]);
+  // const handleWishList = (id, e) => {
+  //   e.prventDefault();
+  //   const exitstingItem = exWishList.find((item) => item.phoneId === id);
+  //   console.log(`exitstingItem`, exitstingItem);
+  //   if (userId) {
+  //     const newWishList = {
+  //       userId: userId,
+  //       phoneId: id,
+  //       quantity: 1,
+  //     };
+  //     axiosClient
+  //       .post(`https://localhost:7217/api/WishLists`, newWishList)
+  //       .then(() => {
+  //         navigate("/Wishlist");
+  //       });
+  //   } else {
+  //     navigate("/Login");
+  //   }
+  // };
+  // Add to favorite
+  const addToWishList = async (phoneModelId) => {
+    if (userId) {
+      try {
+        await axiosClient.post(`https://localhost:7217/api/WishLists`, {
+          userId: userId,
+          phoneModelId: phoneModelId,
+        });
+        alert("Sản phẩm đã được yêu thích");
+      } catch (error) {
+        console.error("Lỗi khi yêu thích sản phẩm", error);
+      }
+    } else {
+      alert("Bạn cần đăng nhập để chọn sản phẩm yêu thích");
+      window.location.href = "/Login";
+    }
+  };
 
   //Sắp xếp phonemodel theo giá
   const [selectedPrice, setSelectedPrice] = useState("decrease");
@@ -138,17 +215,26 @@ const Home = () => {
                         <div className="card-content">
                           <Card.Title>{item.name}</Card.Title>
                           <Card.Text>
-                            <span className="old-price">{item.oldPrice.toLocaleString()}đ</span>
-                            <br/>
-                            <span className="promational-price"> {item.promotionalPrice.toLocaleString()}đ</span>
+                            <span className="old-price">
+                              {item.oldPrice.toLocaleString()}đ
+                            </span>
+                            <br />
+                            <span className="promational-price">
+                              {" "}
+                              {item.promotionalPrice.toLocaleString()}đ
+                            </span>
                           </Card.Text>
                         </div>
-                        <Link to={"/WishList"} className="favorite-button">
+                        <Link
+                          to={""}
+                          className="favorite-button"
+                          onClick={addToWishList}
+                        >
                           <FontAwesomeIcon icon={faHeart} />
                         </Link>
                       </Card.Body>
                     </Card>
-                  </Col>                 
+                  </Col>
                 </>
               );
             })}
