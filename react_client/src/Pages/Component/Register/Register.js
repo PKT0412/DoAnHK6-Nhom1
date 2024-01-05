@@ -17,7 +17,7 @@ const Register = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (!user.username || !user.password || !user.fullname || !user.email || !user.address || !user.phone || !user.birthDay || !user.gender) {
+    if (!user.username || !user.password || !user.fullname || !user.email || !user.address || !user.phonenumber || !user.birthDay || !user.gender) {
       alert('Vui lòng điền đầy đủ thông tin đăng ký.');
       return;
     }
@@ -98,7 +98,7 @@ const Register = () => {
             <Form.Control
               type="text"
               placeholder="Nhập số điện thoại"
-              name="phone"
+              name="phonenumber"
               onChange={handleChange}
             />
           </Form.Group>
@@ -147,7 +147,7 @@ const Register = () => {
           <Col className="d-flex justify-content-center">
             <p className="text-center">
               Đã có tài khoản?{' '}
-              <a href="/login" className="text-decoration-none color-black" style={{ color: 'gray' }}>
+              <a href="/Login" className="text-decoration-none color-black" style={{ color: 'gray' }}>
                 Đăng nhập
               </a>
             </p>
