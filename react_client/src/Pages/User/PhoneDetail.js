@@ -11,6 +11,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const PhoneDetailPage = () => {
   const SettingsSlider = {
@@ -140,22 +141,38 @@ const PhoneDetailPage = () => {
 
   const handleAddToCart = (e) => {
     e.preventDefault();
+  
+    const token = localStorage.getItem('token');
+  
+    // Kiểm tra xem có token hay không
+    if (!token) {
+      // Chuyển hướng đến trang đăng nhập
+      navigate('/login');
+      return;
+    }
+  
+    // Giải mã token và trích xuất thông tin người dùng
+    const decodedToken = jwtDecode(token);
+    const userId = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+  
     const newCartItem = {
       quantity: 1,
       status: true,
-      userId: "5aae4bbb-a945-4467-93b6-261110cc88e7",
+      userId: userId,
       phoneId: phoneByColorAndStorage.id
     };
   
-    axios.post('https://localhost:7217/api/Carts', newCartItem)
+    axios
+      .post('https://localhost:7217/api/Carts', newCartItem)
       .then(() => {
         navigate('/cart');
       })
       .catch((error) => {
-        // Handle error
+        // Xử lý lỗi
         console.error('Failed to add item to cart:', error);
       });
-      console.log(newCartItem);
+  
+    console.log(newCartItem);
   };
 
 
@@ -169,7 +186,7 @@ const PhoneDetailPage = () => {
           <Col md={7} className="phone-image-review">
             {/* Hình lớn */}
             <div className="large-image-container">
-              <Image
+              <Image  
                 src={`https://localhost:7217/Image/PhoneModel/${phoneModel.name
                   }/${hoveredImage || largeImage}`}
                 fluid

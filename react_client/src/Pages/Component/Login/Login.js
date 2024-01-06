@@ -4,14 +4,13 @@ import { useNavigate } from 'react-router';
 import axios from 'axios';
 import Header from '../Header/Header.js';
 import Footer from '../Footer/Footer.js';
-import { useCookies } from 'react-cookie';
+import "./Login.css";
+
 
 const Login = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [cookies, setCookie] = useCookies(['token']);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,7 +20,8 @@ const Login = (props) => {
 
   const checkLoginStatus = () => {
     // Kiểm tra xem token đã tồn tại hay không
-    if (cookies.token) {
+    const token = localStorage.getItem('token');
+    if (token) {
       // Điều hướng đến trang chính
       navigate('/');
     }
@@ -42,8 +42,8 @@ const Login = (props) => {
       })
       .then((response) => {
         const token = response.data.token;
-        // Lưu token vào cookie
-        setCookie('token', token, { path: '/' });
+        // Lưu token vào localStorage
+        localStorage.setItem('token', token);
         // Kiểm tra trạng thái đăng nhập sau khi đăng nhập thành công
         checkLoginStatus();
       })
@@ -54,12 +54,12 @@ const Login = (props) => {
   };
 
   const handleLogout = (e) => {
-    // Xóa token khỏi cookie
-    setCookie('token', '', { path: '/' });
-    
+    // Xóa token khỏi localStorage
+    localStorage.removeItem('token');
+
     // Cập nhật trạng thái đăng nhập
     setIsLoggedIn(false);
-    
+
     // Điều hướng người dùng đến trang đăng nhập
     navigate('/');
   };
@@ -67,7 +67,7 @@ const Login = (props) => {
   return (
     <>
       <Header></Header>
-      <Container className="d-flex justify-content-center align-items-center">
+      <Container className="container d-flex justify-content-center align-items-center">
         <Form onSubmit={handleLogin} className="w-50 p-4 rounded bg-light">
           <h3 className="mb-4 text-center">Đăng nhập</h3>
 
@@ -99,7 +99,7 @@ const Login = (props) => {
           <Col className="d-flex justify-content-center">
             <p className="text-center">
               Chưa có tài khoản?{' '}
-              <a href="/register" className="text-decoration-none color-black" style={{ color: 'gray' }}>
+              <a href="/Register" className="text-decoration-none color-black" style={{ color: 'gray' }}>
                 Đăng ký tài khoản
               </a>
             </p>

@@ -31,6 +31,18 @@ namespace API_Server.Controllers
                                  .ToListAsync();
         }
 
+        [HttpGet]
+        [Route("GetCartByUser/{userId}")]
+        public async Task<ActionResult<IEnumerable<Cart>>> GetCartsByUserId(string userId)
+        {
+            var carts = await _context.Carts
+        .Include(c => c.Phone)
+            .ThenInclude(p => p.PhoneModel)
+        .Where(c => c.UserId == userId)
+        .ToListAsync();
+            return carts;
+        }
+
         // GET: api/Carts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Cart>> GetCart(int id)
