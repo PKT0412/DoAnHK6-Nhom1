@@ -1,6 +1,6 @@
 import Header from "../Component/Header/Header";
 import Footer from "../Component/Footer/Footer";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Table, Image } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHouse,
@@ -14,8 +14,63 @@ import {
   faArrowAltCircleLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axiosClient from "../Component/axiosClient";
 
 const Wishlist = () => {
+  const [userId, setUserId] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const [Wishlists, setWishLists] = useState([]);
+
+  useEffect(() => {
+    getWishLists();
+  }, []);
+
+  const getWishLists = async () => {
+    let res = await axiosClient.get(`https://localhost:7217/api/WishLists`);
+    if (res && res.data) {
+      setWishLists(res.data);
+    }
+  };
+  const handleDelete = (id) => {
+    const shouldDelete = window.confirm(
+      "Bạn có chắc chắn muốn xóa sản phẩm yêu thích này?"
+    );
+    if (shouldDelete) {
+      axiosClient
+        .delete(`https://localhost:7217/api/WishLists/${id}`)
+        .then(() => {
+          setWishLists(Wishlists.filter((item) => item.id !== id));
+        })
+        .catch((error) => {
+          console.error("Lỗi xóa: ", error);
+        });
+    }
+  };
+
+  // useEffect(() => {
+  //   const userToken = getUserIdFromCookie("userToken");
+
+  //   if (userToken) {
+  //     // Nếu có token,đánh dấu người dùng đã đăng nhập
+  //     setIsLogin(true);
+  //   }
+  // }, []);
+  // const getUserIdFromCookie = (cookie) => {
+  //   const match = cookie.match(/userId=([^;]+)/);
+  //   return match ? match[1] : null;
+  // };
+  // useEffect(() => {
+  //   if (setIsLogin) {
+  //     axiosClient
+  //       .get(
+  //         `https://localhost:7217/api/WishLists/GetWishListByuUser/${userId}`
+  //       )
+  //       .then((res) => {
+  //         setWishLists(res.data);
+  //       });
+  //   }
+  // }, [userId]);
   return (
     <>
       <Header />
@@ -103,10 +158,52 @@ const Wishlist = () => {
               padding: "20px",
               marginTop: "20px",
               marginBottom: "20px",
-              height: "400px",
+
               marginLeft: "10px",
             }}
-          ></Col>
+          >
+            <Table>
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Image</th>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>Fuction</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Wishlists.map((item) => {
+                  return (
+                    <tr>
+                      <td>{item.phoneModel.id}</td>
+                      <td>
+                        <Image
+                          src={`https://localhost:7217/Image/PhoneModel/${item.phoneModel.name}/${item.phoneModel.image}`}
+                          style={{ width: "100px" }}
+                          alt="Hình"
+                        />
+                      </td>
+                      <td>{item.phoneModel.name}</td>
+                      <td>
+                        {item.phoneModel.promotionalPrice.toLocaleString()}đ
+                      </td>
+                      <td>
+                        {
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            Xóa
+                          </button>
+                        }
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </Col>
         </Row>
       </Container>
       <Footer />

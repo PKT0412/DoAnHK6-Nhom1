@@ -11,15 +11,17 @@ const Cart = () => {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    axios.get(`https://localhost:7217/api/Carts`).
-      then(res => setCart(res.data));
+    axios
+      .get(`https://localhost:7217/api/Carts`)
+      .then((res) => setCart(res.data));
   }, []);
 
   const [phone, setPhone] = useState([]);
 
   useEffect(() => {
-    axios.get(`https://localhost:7217/api/Phones`).
-      then(res => setPhone(res.data));
+    axios
+      .get(`https://localhost:7217/api/Phones`)
+      .then((res) => setPhone(res.data));
   }, []);
 
   // const increaseQuantity = (id) => {
@@ -57,21 +59,23 @@ const Cart = () => {
       "Bạn có chắc chắn muốn xóa sản phẩm này không?"
     );
     if (shouldDelete) {
-      axios.delete(`https://localhost:7217/api/Carts/${id}`)
+      axios
+        .delete(`https://localhost:7217/api/Carts/${id}`)
         .then(() => {
           setCart(cart.filter((item) => item.id !== id));
         })
         .catch((error) => {
           console.error("Lỗi xóa: ", error);
         });
-    }}
+    }
+  };
 
   return (
     <>
       <Header />
       {/* Phần điều hướng về trang sản phẩm */}
       <div className="breadcrumb">
-        <ul >
+        <ul>
           <li style={{ display: "inline", marginLeft: "15px" }}>
             <Link to={"/"} style={{ color: "#515154" }}>
               Trang chủ
@@ -92,32 +96,25 @@ const Cart = () => {
             <th>Tên Sản Phẩm</th>
             <th>Số Lượng</th>
             <th>Giá Bán</th>
-
           </tr>
         </thead>
         <tbody>
           {cart.map((item) => (
             <tr key={item.id}>
-                <td>
-                  {
-                    
-                    <img
-                      src={`https://localhost:7217/Image/PhoneModel/${item.phone.phoneModel.name}/${item.phone.image}`}
-                      alt=""
-                      style={{ width: 150 }}
-                    />
-                  }
-                </td>
               <td>
-                  {item.phone.name}
+                {
+                  <img
+                    src={`https://localhost:7217/Image/PhoneModel/${item.phone.phoneModel.name}/${item.phone.image}`}
+                    alt=""
+                    style={{ width: 150 }}
+                  />
+                }
               </td>
-              <td>
-                {item.quantity}
-              </td>
+              <td>{item.phone.name}</td>
+              <td>{item.quantity}</td>
               <td> {item.phone.price.toLocaleString()} VNĐ</td>
 
               <td>
-
                 <Button
                   className="btn btn-danger"
                   onClick={() => handleDelete(item.id)}

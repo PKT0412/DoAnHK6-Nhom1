@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API_Server.Controllers
 {
-    [Authorize]   
+    //[Authorize]   
     [Route("api/[controller]")]
     [ApiController]
     public class WishListsController : ControllerBase
@@ -27,7 +27,9 @@ namespace API_Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WishList>>> GetWishLists()
         {
-            return await _context.WishLists.ToListAsync();
+            return await _context.WishLists
+                .Include(p => p.PhoneModel)
+                .ToListAsync();
         }
 
         // GET: api/WishLists/User
@@ -36,8 +38,7 @@ namespace API_Server.Controllers
 
         public async Task<ActionResult<IEnumerable<WishList>>> GetWishListByUser(string userId)
         {
-            var wishlist = await _context.WishLists.Include(c=>c.Phone)
-                .ThenInclude(p=>p.PhoneModel)
+            var wishlist = await _context.WishLists.Include(c => c.PhoneModel)
                 .Where(c => c.UserId == userId).ToListAsync();
 
 

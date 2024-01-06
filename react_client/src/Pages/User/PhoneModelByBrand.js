@@ -141,12 +141,17 @@ const PhoneModelByBrand = () => {
                         <div className="card-content">
                           <Card.Title>{item.name}</Card.Title>
                           <Card.Text>
-                            <span className="old-price">{item.oldPrice.toLocaleString()}đ</span>
-                            <br/>
-                            <span className="promational-price"> {item.promotionalPrice.toLocaleString()}đ</span>
+                            <span className="old-price">
+                              {item.oldPrice.toLocaleString()}đ
+                            </span>
+                            <br />
+                            <span className="promational-price">
+                              {" "}
+                              {item.promotionalPrice.toLocaleString()}đ
+                            </span>
                           </Card.Text>
                         </div>
-                        <Link to={"/WishList"} className="favorite-button">
+                        <Link to={"/WishList/"} className="favorite-button">
                           <FontAwesomeIcon icon={faHeart} />
                         </Link>
                       </Card.Body>

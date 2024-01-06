@@ -12,17 +12,49 @@ import {
 } from "react-bootstrap";
 import "./css/HomeAndPhoneModelByBrand.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHand, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import Header from "../Component/Header/Header.js";
 import axiosClient from "../Component/axiosClient";
 import Footer from "../Component/Footer/Footer";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import { useCookies } from "react-cookie";
 const Home = () => {
   // Lấy ra userID
-  // const [userId, setUserId] = useState(null);
-  // const navigate = useNavigate();
+  const [userId, setUserId] = useState(null);
+  // const [isLogin, setIsLogin] = useState(false);
+  const navigate = useNavigate();
+  const [cookies, setCookie] = useCookies(["token"]);
+
+  // const checkLoginStatus = () => {
+  //   // Kiểm tra xem token đã tồn tại hay không
+  //   if (cookies.token) {
+  //     // Điều hướng đến trang chính
+  //     navigate("WishList");
+  //   }
+  // };
+  // useEffect(() => {
+  //   const checkLoginStatus = async () => {
+  //     try {
+  //       axiosClient
+  //         .post("https://localhost:7217/api/Users/login", {
+  //           withCredentials: true,
+  //         })
+  //         .then((response) => {
+  //           const token = response.data.token;
+  //           // Lưu token vào cookie
+  //           setCookie("token", token, { path: "/" });
+  //           // Kiểm tra trạng thái đăng nhập sau khi đăng nhập thành công
+  //           console.log(cookies.token);
+  //           checkLoginStatus();
+  //         });
+  //     } catch (error) {
+  //       console.log("Chưa đăng nhập yêu cầu đăng nhập", error);
+  //     }
+  //   };
+
+  //   checkLoginStatus();
+  // }, []);
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -46,7 +78,7 @@ const Home = () => {
   //   };
   //   fetchData();
   // });
-  // // Viết logic để trích xuất userId từ chuỗi sang cookie
+  // Viết logic để trích xuất userId từ chuỗi sang cookie
   // const getUserIdFromCookie = (cookie) => {
   //   const match = cookie.match(/userId=([^;]+)/);
   //   return match ? match[1] : null;
@@ -67,49 +99,24 @@ const Home = () => {
     axiosClient.get(`/Brands`).then((res) => setBrands(res.data));
   }, []);
 
-  // Add to Wishlist
-  // const [exWishList, setExWishList] = useState([]);
-  // useEffect(() => {
-  //   axiosClient
-  //     .get(`https://localhost:7217/api/WishLists/GetWishListByuUser/${userId}`)
-  //     .then((res) => setExWishList(res.data));
-  // }, [userId]);
-  // const handleWishList = (id, e) => {
-  //   e.prventDefault();
-  //   const exitstingItem = exWishList.find((item) => item.phoneId === id);
-  //   console.log(`exitstingItem`, exitstingItem);
-  //   if (userId) {
-  //     const newWishList = {
-  //       userId: userId,
-  //       phoneId: id,
-  //       quantity: 1,
-  //     };
-  //     axiosClient
-  //       .post(`https://localhost:7217/api/WishLists`, newWishList)
-  //       .then(() => {
-  //         navigate("/Wishlist");
-  //       });
-  //   } else {
-  //     navigate("/Login");
-  //   }
-  // };
-  // Add to favorite
-  // const addToWishList = async (phoneModelId) => {
-  //   if (userId) {
-  //     try {
-  //       await axiosClient.post(`https://localhost:7217/api/WishLists`, {
-  //         userId: userId,
-  //         phoneModelId: phoneModelId,
-  //       });
-  //       alert("Sản phẩm đã được yêu thích");
-  //     } catch (error) {
-  //       console.error("Lỗi khi yêu thích sản phẩm", error);
-  //     }
-  //   } else {
-  //     alert("Bạn cần đăng nhập để chọn sản phẩm yêu thích");
-  //     window.location.href = "/Login";
-  //   }
-  // };
+  const addToWishList = (id) => {
+    const newWishListItem = {
+      status: true,
+      userId: "b7f9820a-cc56-4d8a-ad3a-b309a7fda802",
+      phoneModelId: id,
+    };
+
+    axiosClient
+      .post("https://localhost:7217/api/WishLists", newWishListItem)
+      .then(() => {
+        navigate("/WishList");
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Failed to add item to cart:", error);
+      });
+    console.log(newWishListItem);
+  };
 
   //Sắp xếp phonemodel theo giá
   const [selectedPrice, setSelectedPrice] = useState("decrease");
@@ -228,7 +235,7 @@ const Home = () => {
                         <Link
                           to={""}
                           className="favorite-button"
-                          // onClick={handleWishList}
+                          onClick={() => addToWishList(item.id)}
                         >
                           <FontAwesomeIcon icon={faHeart} />
                         </Link>
