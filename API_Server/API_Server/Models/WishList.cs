@@ -18,9 +18,6 @@ namespace API_Server.Models
         public int PhoneModelId { get; set; }
 
         public PhoneModel PhoneModel { get; set; }
-
-        public int PhoneId { get; set; }
-        public Phone Phone { get; set; }
         public WishList()
         {
             Status = true;

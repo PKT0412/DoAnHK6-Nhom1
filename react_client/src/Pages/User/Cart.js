@@ -13,15 +13,17 @@ const Cart = () => {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    axios.get(`https://localhost:7217/api/Carts`).
-      then(res => setCart(res.data));
+    axios
+      .get(`https://localhost:7217/api/Carts`)
+      .then((res) => setCart(res.data));
   }, []);
 
   const [phone, setPhone] = useState([]);
 
   useEffect(() => {
-    axios.get(`https://localhost:7217/api/Phones`).
-      then(res => setPhone(res.data));
+    axios
+      .get(`https://localhost:7217/api/Phones`)
+      .then((res) => setPhone(res.data));
   }, []);
 
   const [isUpdating, setIsUpdating] = useState(false);
@@ -83,7 +85,8 @@ const Cart = () => {
       "Bạn có chắc chắn muốn xóa sản phẩm này không?"
     );
     if (shouldDelete) {
-      axios.delete(`https://localhost:7217/api/Carts/${id}`)
+      axios
+        .delete(`https://localhost:7217/api/Carts/${id}`)
         .then(() => {
           setCart(cart.filter((item) => item.id !== id));
         })
@@ -91,7 +94,7 @@ const Cart = () => {
           console.error("Lỗi xóa: ", error);
         });
     }
-  }
+  };
 
   return (
     <>

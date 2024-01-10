@@ -12,45 +12,22 @@ import {
 } from "react-bootstrap";
 import "./css/HomeAndPhoneModelByBrand.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHand, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import Header from "../Component/Header/Header.js";
 import axiosClient from "../Component/axiosClient";
 import Footer from "../Component/Footer/Footer";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode as jwt_decode } from "jwt-decode";
 
 const Home = () => {
-  // Lấy ra userID
-  // const [userId, setUserId] = useState(null);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axiosClient.get(
-  //         `https://localhost:7217/api/Users/api/Users`
-  //       );
+  const [userId, setUserId] = useState();
+  const [isTokenDecoded, setTokenDecoded] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  //       // Lấy userId từ cookies trong header response
-  //       const cookies = response.headers["set-cookie"];
-  //       const userIdCookie = cookies.find((cookie) =>
-  //         cookie.includes("userId")
-  //       );
-  //       if (userIdCookie) {
-  //         const userId = getUserIdFromCookie(userIdCookie);
-  //         setUserId(userId);
-  //       }
-  //     } catch (error) {
-  //       console.log("Error:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // });
-  // // Viết logic để trích xuất userId từ chuỗi sang cookie
-  // const getUserIdFromCookie = (cookie) => {
-  //   const match = cookie.match(/userId=([^;]+)/);
-  //   return match ? match[1] : null;
-  // };
+  const [wishlist, setWishList] = useState([]);
 
   const [slideshows, setSlideshows] = useState([]);
   useEffect(() => {
@@ -67,49 +44,58 @@ const Home = () => {
     axiosClient.get(`/Brands`).then((res) => setBrands(res.data));
   }, []);
 
-  // Add to Wishlist
-  // const [exWishList, setExWishList] = useState([]);
+  useEffect(() => {
+    if (userId) {
+      axiosClient
+        .get(`https://localhost:7217/api/WishLists/GetWishListByUser/${userId}`)
+        .then((res) => setWishList(res.data))
+        .catch((error) => {
+          console.error("Failed to fetch wishlist:", error);
+        });
+    }
+  }, [userId]);
+
+  //check token
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const decoded = jwt_decode(token);
+      setUserId(
+        decoded[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ]
+      );
+      setTokenDecoded(true);
+      setIsAuthenticated(true);
+    } else {
+      setTokenDecoded(false);
+    }
+    console.log("check uerid", userId);
+  }, [userId]);
+
   // useEffect(() => {
-  //   axiosClient
-  //     .get(`https://localhost:7217/api/WishLists/GetWishListByuUser/${userId}`)
-  //     .then((res) => setExWishList(res.data));
-  // }, [userId]);
-  // const handleWishList = (id, e) => {
-  //   e.prventDefault();
-  //   const exitstingItem = exWishList.find((item) => item.phoneId === id);
-  //   console.log(`exitstingItem`, exitstingItem);
-  //   if (userId) {
-  //     const newWishList = {
-  //       userId: userId,
-  //       phoneId: id,
-  //       quantity: 1,
-  //     };
-  //     axiosClient
-  //       .post(`https://localhost:7217/api/WishLists`, newWishList)
-  //       .then(() => {
-  //         navigate("/Wishlist");
-  //       });
-  //   } else {
-  //     navigate("/Login");
-  //   }
-  // };
-  // Add to favorite
-  // const addToWishList = async (phoneModelId) => {
-  //   if (userId) {
-  //     try {
-  //       await axiosClient.post(`https://localhost:7217/api/WishLists`, {
-  //         userId: userId,
-  //         phoneModelId: phoneModelId,
-  //       });
-  //       alert("Sản phẩm đã được yêu thích");
-  //     } catch (error) {
-  //       console.error("Lỗi khi yêu thích sản phẩm", error);
-  //     }
-  //   } else {
-  //     alert("Bạn cần đăng nhập để chọn sản phẩm yêu thích");
-  //     window.location.href = "/Login";
-  //   }
-  // };
+  //   addToWishList();
+  // }, []);
+
+  // AddtoWishList
+  const addToWishList = (id) => {
+    const newWishListItem = {
+      status: true,
+      userId: userId,
+      phoneModelId: id,
+    };
+
+    axiosClient
+      .post(`/WishLists`, newWishListItem)
+      .then(() => {
+        navigate(`/WishList`);
+      })
+      .catch((error) => {
+        console.error("Failed to add item to wishlist:", error);
+      });
+    console.log(newWishListItem);
+  };
 
   //Sắp xếp phonemodel theo giá
   const [selectedPrice, setSelectedPrice] = useState("decrease");
@@ -228,7 +214,7 @@ const Home = () => {
                         <Link
                           to={""}
                           className="favorite-button"
-                          // onClick={handleWishList}
+                          onClick={() => addToWishList(item.id)}
                         >
                           <FontAwesomeIcon icon={faHeart} />
                         </Link>

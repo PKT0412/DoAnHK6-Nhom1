@@ -28,8 +28,7 @@ namespace API_Server.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]")]
-        public async Task<IActionResult> GetuserId()
+        public async Task<ActionResult<IEnumerable<WishList>>> GetUser()
         {
             if(User.Identity.IsAuthenticated)
             {
