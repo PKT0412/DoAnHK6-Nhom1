@@ -11,9 +11,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API_Server.Controllers
 {
-    //[Authorize]   
+   
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class WishListsController : ControllerBase
     {
         private readonly API_ServerContext _context;
@@ -34,7 +35,7 @@ namespace API_Server.Controllers
 
         // GET: api/WishLists/User
         [HttpGet]
-        [Route("GetWishListByuUser/{userId}")]
+        [Route("GetWishListByUser/{userId}")]
 
         public async Task<ActionResult<IEnumerable<WishList>>> GetWishListByUser(string userId)
         {

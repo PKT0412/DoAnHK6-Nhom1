@@ -16,12 +16,36 @@ import {
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axiosClient from "../Component/axiosClient";
+// import { jwtDecode } from "jwt-decode";
 
 const Wishlist = () => {
-  const [userId, setUserId] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  // const [userId, setUserId] = useState(false);
   const [Wishlists, setWishLists] = useState([]);
+  // const [decoded, setDecoded] = useState(false);
 
+  // useEffect(() => {
+  //   const token = localStorage.getItem("jwt");
+  //   if (token) {
+  //     const decoded = jwtDecode(token);
+  //     setUserId(
+  //       decoded[
+  //         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+  //       ]
+  //     );
+  //     setDecoded(true);
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   if (decoded) {
+  //     axiosClient.get(
+  //       `https://localhost:7217/api/WishLists/GetWishListByuUser/${userId}`.then(
+  //         (res) => {
+  //           setDecoded(res.data);
+  //         }
+  //       )
+  //     );
+  //   }
+  // }, [userId]);
   useEffect(() => {
     getWishLists();
   }, []);
@@ -48,29 +72,6 @@ const Wishlist = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const userToken = getUserIdFromCookie("userToken");
-
-  //   if (userToken) {
-  //     // Nếu có token,đánh dấu người dùng đã đăng nhập
-  //     setIsLogin(true);
-  //   }
-  // }, []);
-  // const getUserIdFromCookie = (cookie) => {
-  //   const match = cookie.match(/userId=([^;]+)/);
-  //   return match ? match[1] : null;
-  // };
-  // useEffect(() => {
-  //   if (setIsLogin) {
-  //     axiosClient
-  //       .get(
-  //         `https://localhost:7217/api/WishLists/GetWishListByuUser/${userId}`
-  //       )
-  //       .then((res) => {
-  //         setWishLists(res.data);
-  //       });
-  //   }
-  // }, [userId]);
   return (
     <>
       <Header />

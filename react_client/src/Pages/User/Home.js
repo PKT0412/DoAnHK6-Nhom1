@@ -18,71 +18,16 @@ import axiosClient from "../Component/axiosClient";
 import Footer from "../Component/Footer/Footer";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import { jwtDecode as jwt_decode } from "jwt-decode";
+
 const Home = () => {
-  // Lấy ra userID
-  const [userId, setUserId] = useState(null);
-  // const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies(["token"]);
 
-  // const checkLoginStatus = () => {
-  //   // Kiểm tra xem token đã tồn tại hay không
-  //   if (cookies.token) {
-  //     // Điều hướng đến trang chính
-  //     navigate("WishList");
-  //   }
-  // };
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //     try {
-  //       axiosClient
-  //         .post("https://localhost:7217/api/Users/login", {
-  //           withCredentials: true,
-  //         })
-  //         .then((response) => {
-  //           const token = response.data.token;
-  //           // Lưu token vào cookie
-  //           setCookie("token", token, { path: "/" });
-  //           // Kiểm tra trạng thái đăng nhập sau khi đăng nhập thành công
-  //           console.log(cookies.token);
-  //           checkLoginStatus();
-  //         });
-  //     } catch (error) {
-  //       console.log("Chưa đăng nhập yêu cầu đăng nhập", error);
-  //     }
-  //   };
+  const [userId, setUserId] = useState();
+  const [isTokenDecoded, setTokenDecoded] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  //   checkLoginStatus();
-  // }, []);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axiosClient.get(
-  //         `https://localhost:7217/api/Users/api/Users`
-  //       );
-
-  //       // Lấy userId từ cookies trong header response
-  //       const cookies = response.headers["set-cookie"];
-  //       const userIdCookie = cookies.find((cookie) =>
-  //         cookie.includes("userId")
-  //       );
-  //       if (userIdCookie) {
-  //         const userId = getUserIdFromCookie(userIdCookie);
-  //         setUserId(userId);
-  //       }
-  //     } catch (error) {
-  //       console.log("Error:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // });
-  // Viết logic để trích xuất userId từ chuỗi sang cookie
-  // const getUserIdFromCookie = (cookie) => {
-  //   const match = cookie.match(/userId=([^;]+)/);
-  //   return match ? match[1] : null;
-  // };
+  const [wishlist, setWishList] = useState([]);
 
   const [slideshows, setSlideshows] = useState([]);
   useEffect(() => {
@@ -99,21 +44,55 @@ const Home = () => {
     axiosClient.get(`/Brands`).then((res) => setBrands(res.data));
   }, []);
 
+  useEffect(() => {
+    if (userId) {
+      axiosClient
+        .get(`https://localhost:7217/api/WishLists/GetWishListByUser/${userId}`)
+        .then((res) => setWishList(res.data))
+        .catch((error) => {
+          console.error("Failed to fetch wishlist:", error);
+        });
+    }
+  }, [userId]);
+
+  //check token
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const decoded = jwt_decode(token);
+      setUserId(
+        decoded[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ]
+      );
+      setTokenDecoded(true);
+      setIsAuthenticated(true);
+    } else {
+      setTokenDecoded(false);
+    }
+    console.log("check uerid", userId);
+  }, [userId]);
+
+  // useEffect(() => {
+  //   addToWishList();
+  // }, []);
+
+  // AddtoWishList
   const addToWishList = (id) => {
     const newWishListItem = {
       status: true,
-      userId: "b7f9820a-cc56-4d8a-ad3a-b309a7fda802",
+      userId: userId,
       phoneModelId: id,
     };
 
     axiosClient
-      .post("https://localhost:7217/api/WishLists", newWishListItem)
+      .post(`/WishLists`, newWishListItem)
       .then(() => {
-        navigate("/WishList");
+        navigate(`/WishList`);
       })
       .catch((error) => {
-        // Handle error
-        console.error("Failed to add item to cart:", error);
+        console.error("Failed to add item to wishlist:", error);
       });
     console.log(newWishListItem);
   };
