@@ -153,7 +153,7 @@ const PhoneDetailPage = () => {
   
     // Giải mã token và trích xuất thông tin người dùng
     const decodedToken = jwtDecode(token);
-    const userId = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+    const userId = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
   
     const newCartItem = {
       quantity: 1,
