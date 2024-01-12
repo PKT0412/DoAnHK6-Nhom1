@@ -6,7 +6,6 @@ import Header from '../Header/Header.js';
 import Footer from '../Footer/Footer.js';
 import "./Login.css";
 
-
 const Login = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -44,6 +43,7 @@ const Login = (props) => {
         const token = response.data.token;
         // Lưu token vào localStorage
         localStorage.setItem('token', token);
+        localStorage.setItem('username', username);
         // Kiểm tra trạng thái đăng nhập sau khi đăng nhập thành công
         checkLoginStatus();
       })
