@@ -129,6 +129,10 @@
   z-index: 1;
 }
 
+.phonemodels .favorite-button-active {
+  color: red;
+}
+
 .phonemodels .favorite-button:hover {
   color: red;
 }

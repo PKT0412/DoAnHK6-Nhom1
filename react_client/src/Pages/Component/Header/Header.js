@@ -44,7 +44,7 @@ const Header = () => {
     setUsername(null);
 
     // Reload lại trang web
-    navigate("/");
+    window.location.reload("/");
 
     toast.success("Log out success!");
   };

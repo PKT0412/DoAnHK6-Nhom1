@@ -22,40 +22,66 @@ import { jwtDecode as jwt_decode } from "jwt-decode";
 
 const Home = () => {
   const navigate = useNavigate();
-
-  const [userId, setUserId] = useState();
+  const [userId, setUserId] = useState(null);
   const [isTokenDecoded, setTokenDecoded] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const [wishlist, setWishList] = useState([]);
-
   const [slideshows, setSlideshows] = useState([]);
-  useEffect(() => {
-    axiosClient.get(`/SlideShows`).then((res) => setSlideshows(res.data));
-  }, []);
-
   const [phoneModels, setPhoneModels] = useState([]);
-  useEffect(() => {
-    axiosClient.get(`/PhoneModels`).then((res) => setPhoneModels(res.data));
-  }, []);
-
   const [brands, setBrands] = useState([]);
-  useEffect(() => {
-    axiosClient.get(`/Brands`).then((res) => setBrands(res.data));
-  }, []);
+  const [selectedPrice, setSelectedPrice] = useState("decrease");
+  const [wishlists, setWishlists] = useState([]);
 
   useEffect(() => {
-    if (userId) {
+    if (isAuthenticated) {
       axiosClient
         .get(`https://localhost:7217/api/WishLists/GetWishListByUser/${userId}`)
-        .then((res) => setWishList(res.data))
+        .then((response) => {
+          setWishlists(response.data);
+        })
         .catch((error) => {
-          console.error("Failed to fetch wishlist:", error);
+          console.error("Failed to fetch wishlists:", error);
         });
     }
-  }, [userId]);
+  }, [isAuthenticated, userId]);
 
-  //check token
+  const checkIconWishlist = (id) => {
+    const existingPhoneModel = wishlists.find(
+      (item) => item.phoneModelId === id
+    );
+
+    if (existingPhoneModel && isTokenDecoded) {
+      // Phonemodel đã tồn tại trong wishlists
+      return (
+        <Link to="" className="favorite-button favorite-button-active">
+          <FontAwesomeIcon icon={faHeart} />
+        </Link>
+      );
+    } else {
+      // Phonemodel chưa tồn tại trong wishlists
+      return (
+        <Link
+          to=""
+          className="favorite-button"
+          onClick={() => addToWishList(id)}
+        >
+          <FontAwesomeIcon icon={faHeart} />
+        </Link>
+      );
+    }
+  };
+
+  useEffect(() => {
+    Promise.all([
+      axiosClient.get("/SlideShows"),
+      axiosClient.get("/PhoneModels"),
+      axiosClient.get("/Brands"),
+    ]).then(([slideshowsRes, phoneModelsRes, brandsRes]) => {
+      setSlideshows(slideshowsRes.data);
+      setPhoneModels(phoneModelsRes.data);
+      setBrands(brandsRes.data);
+    });
+  }, []);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -71,14 +97,14 @@ const Home = () => {
     } else {
       setTokenDecoded(false);
     }
-    console.log("check uerid", userId);
-  }, [userId]);
+  }, []);
 
-  // useEffect(() => {
-  //   addToWishList();
-  // }, []);
+  useEffect(() => {
+    if (isAuthenticated) {
+      addToWishList();
+    }
+  });
 
-  // AddtoWishList
   const addToWishList = (id) => {
     const newWishListItem = {
       status: true,
@@ -97,12 +123,10 @@ const Home = () => {
     console.log(newWishListItem);
   };
 
-  //Sắp xếp phonemodel theo giá
-  const [selectedPrice, setSelectedPrice] = useState("decrease");
   const handlePriceChange = (event) => {
     setSelectedPrice(event.target.value);
   };
-  // Filter the phoneModels array based on selectedPrice
+
   const filteredPhoneModels = useMemo(() => {
     let filteredModels = [...phoneModels];
 
@@ -211,13 +235,7 @@ const Home = () => {
                             </span>
                           </Card.Text>
                         </div>
-                        <Link
-                          to={""}
-                          className="favorite-button"
-                          onClick={() => addToWishList(item.id)}
-                        >
-                          <FontAwesomeIcon icon={faHeart} />
-                        </Link>
+                        {checkIconWishlist(item.id)}
                       </Card.Body>
                     </Card>
                   </Col>

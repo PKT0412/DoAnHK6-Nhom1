@@ -1,5 +1,4 @@
-import Header from "../Component/Header/Header";
-import Footer from "../Component/Footer/Footer";
+import React, { useState, useEffect } from "react";
 import { Container, Col, Row, Table, Image } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -14,48 +13,55 @@ import {
   faArrowAltCircleLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
 import axiosClient from "../Component/axiosClient";
-// import { jwtDecode } from "jwt-decode";
+import { jwtDecode as jwt_decode } from "jwt-decode";
+import Header from "../Component/Header/Header";
+import Footer from "../Component/Footer/Footer";
 
 const Wishlist = () => {
-  // const [userId, setUserId] = useState(false);
-  const [Wishlists, setWishLists] = useState([]);
-  // const [decoded, setDecoded] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [isTokenDecoded, setTokenDecoded] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [wishlists, setWishlists] = useState([]);
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("jwt");
-  //   if (token) {
-  //     const decoded = jwtDecode(token);
-  //     setUserId(
-  //       decoded[
-  //         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-  //       ]
-  //     );
-  //     setDecoded(true);
-  //   }
-  // }, []);
-  // useEffect(() => {
-  //   if (decoded) {
-  //     axiosClient.get(
-  //       `https://localhost:7217/api/WishLists/GetWishListByuUser/${userId}`.then(
-  //         (res) => {
-  //           setDecoded(res.data);
-  //         }
-  //       )
-  //     );
-  //   }
-  // }, [userId]);
+  // Check token
   useEffect(() => {
-    getWishLists();
-  }, []);
+    const token = localStorage.getItem("token");
 
-  const getWishLists = async () => {
-    let res = await axiosClient.get(`https://localhost:7217/api/WishLists`);
-    if (res && res.data) {
-      setWishLists(res.data);
+    if (token) {
+      const decoded = jwt_decode(token);
+      setUserId(
+        decoded[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ]
+      );
+      setTokenDecoded(true);
+      setIsAuthenticated(true);
+    } else {
+      setTokenDecoded(false);
+    }
+    console.log("check userId", userId);
+  }, [userId]);
+
+  useEffect(() => {
+    if (userId) {
+      getWishlists(userId);
+    }
+  }, [userId]);
+
+  const getWishlists = async (userId) => {
+    try {
+      const res = await axiosClient.get(
+        `https://localhost:7217/api/WishLists/GetWishListByUser/${userId}`
+      );
+      if (res && res.data) {
+        setWishlists(res.data);
+      }
+    } catch (error) {
+      console.error("Lỗi lấy danh sách yêu thích: ", error);
     }
   };
+
   const handleDelete = (id) => {
     const shouldDelete = window.confirm(
       "Bạn có chắc chắn muốn xóa sản phẩm yêu thích này?"
@@ -64,7 +70,7 @@ const Wishlist = () => {
       axiosClient
         .delete(`https://localhost:7217/api/WishLists/${id}`)
         .then(() => {
-          setWishLists(Wishlists.filter((item) => item.id !== id));
+          setWishlists(wishlists.filter((item) => item.id !== id));
         })
         .catch((error) => {
           console.error("Lỗi xóa: ", error);
@@ -159,7 +165,6 @@ const Wishlist = () => {
               padding: "20px",
               marginTop: "20px",
               marginBottom: "20px",
-
               marginLeft: "10px",
             }}
           >
@@ -174,34 +179,30 @@ const Wishlist = () => {
                 </tr>
               </thead>
               <tbody>
-                {Wishlists.map((item) => {
-                  return (
-                    <tr>
-                      <td>{item.phoneModel.id}</td>
-                      <td>
-                        <Image
-                          src={`https://localhost:7217/Image/PhoneModel/${item.phoneModel.name}/${item.phoneModel.image}`}
-                          style={{ width: "100px" }}
-                          alt="Hình"
-                        />
-                      </td>
-                      <td>{item.phoneModel.name}</td>
-                      <td>
-                        {item.phoneModel.promotionalPrice.toLocaleString()}đ
-                      </td>
-                      <td>
-                        {
-                          <button
-                            className="btn btn-danger"
-                            onClick={() => handleDelete(item.id)}
-                          >
-                            Xóa
-                          </button>
-                        }
-                      </td>
-                    </tr>
-                  );
-                })}
+                {wishlists.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.phoneModel.id}</td>
+                    <td>
+                      <Image
+                        src={`https://localhost:7217/Image/PhoneModel/${item.phoneModel.name}/${item.phoneModel.image}`}
+                        style={{ width: "100px" }}
+                        alt="Hình"
+                      />
+                    </td>
+                    <td>{item.phoneModel.name}</td>
+                    <td>
+                      {item.phoneModel.promotionalPrice.toLocaleString()}đ
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDelete(item.id)}
+                      >
+                        Xóa
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           </Col>

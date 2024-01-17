@@ -13,38 +13,123 @@ import {
 import "./css/HomeAndPhoneModelByBrand.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import Header from "../Component/Header/Header";
-import Footer from "../Component/Footer/Footer";
+import Header from "../Component/Header/Header.js";
 import axiosClient from "../Component/axiosClient";
+import Footer from "../Component/Footer/Footer";
 import { Link, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode as jwt_decode } from "jwt-decode";
 
-const PhoneModelByBrand = () => {
+const Home = () => {
   const { BrandId } = useParams();
 
+  const navigate = useNavigate();
+  const [userId, setUserId] = useState(null);
+  const [isTokenDecoded, setTokenDecoded] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [slideshows, setSlideshows] = useState([]);
-  useEffect(() => {
-    axiosClient.get(`/SlideShows`).then((res) => setSlideshows(res.data));
-  }, []);
-
-  const [phoneModelsByBrand, setPhoneModelsByBrand] = useState([]);
-  useEffect(() => {
-    axiosClient
-      .get(`/PhoneModels/GetPhoneModelsByBrand?BrandId=${BrandId}`)
-      .then((res) => setPhoneModelsByBrand(res.data));
-  }, [BrandId]);
-
+  const [phoneModelsByBrand, setModelsByBrand] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [selectedPrice, setSelectedPrice] = useState("decrease");
+  const [wishlists, setWishlists] = useState([]);
+
   useEffect(() => {
-    axiosClient.get(`/Brands`).then((res) => setBrands(res.data));
+    if (isAuthenticated) {
+      axiosClient
+        .get(`https://localhost:7217/api/WishLists/GetWishListByUser/${userId}`)
+        .then((response) => {
+          setWishlists(response.data);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch wishlists:", error);
+        });
+    }
+  }, [isAuthenticated, userId]);
+
+  const checkIconWishlist = (id) => {
+    const existingPhoneModel = wishlists.find(
+      (item) => item.phoneModelId === id
+    );
+
+    if (existingPhoneModel && isTokenDecoded) {
+      // Phonemodel đã tồn tại trong wishlists
+      return (
+        <Link to="" className="favorite-button favorite-button-active">
+          <FontAwesomeIcon icon={faHeart} />
+        </Link>
+      );
+    } else {
+      // Phonemodel chưa tồn tại trong wishlists
+      return (
+        <Link
+          to=""
+          className="favorite-button"
+          onClick={() => addToWishList(id)}
+        >
+          <FontAwesomeIcon icon={faHeart} />
+        </Link>
+      );
+    }
+  };
+
+  useEffect(() => {
+    Promise.all([
+      axiosClient.get("/SlideShows"),
+      axiosClient.get(`/PhoneModels/GetPhoneModelsByBrand?BrandId=${BrandId}`),
+      axiosClient.get("/Brands"),
+    ]).then(([slideshowsRes, phoneModelsByBrandRes, brandsRes]) => {
+      setSlideshows(slideshowsRes.data);
+      setModelsByBrand(phoneModelsByBrandRes.data);
+      setBrands(brandsRes.data);
+    });
   }, []);
 
-  //Sắp xếp phonemodel theo giá
-  const [selectedPrice, setSelectedPrice] = useState("decrease");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const decoded = jwt_decode(token);
+      setUserId(
+        decoded[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ]
+      );
+      setTokenDecoded(true);
+      setIsAuthenticated(true);
+    } else {
+      setTokenDecoded(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      addToWishList();
+    }
+  });
+
+  const addToWishList = (id) => {
+    const newWishListItem = {
+      status: true,
+      userId: userId,
+      phoneModelId: id,
+    };
+
+    axiosClient
+      .post(`/WishLists`, newWishListItem)
+      .then(() => {
+        navigate(`/WishList`);
+      })
+      .catch((error) => {
+        console.error("Failed to add item to wishlist:", error);
+      });
+    console.log(newWishListItem);
+  };
+
   const handlePriceChange = (event) => {
     setSelectedPrice(event.target.value);
   };
-  // Filter the phoneModels array based on selectedPrice
-  const filteredPhoneModelsByBrand = useMemo(() => {
+
+  const filteredPhoneModels = useMemo(() => {
     let filteredModels = [...phoneModelsByBrand];
 
     if (selectedPrice === "decrease") {
@@ -55,6 +140,7 @@ const PhoneModelByBrand = () => {
 
     return filteredModels;
   }, [phoneModelsByBrand, selectedPrice]);
+
   return (
     <>
       <Header />
@@ -123,7 +209,7 @@ const PhoneModelByBrand = () => {
           </Row>
 
           <Row className="phonemodels">
-            {filteredPhoneModelsByBrand.map((item) => {
+            {filteredPhoneModels.map((item) => {
               return (
                 <>
                   <Col sm={2} key={item.id}>
@@ -151,9 +237,7 @@ const PhoneModelByBrand = () => {
                             </span>
                           </Card.Text>
                         </div>
-                        <Link to={"/WishList/"} className="favorite-button">
-                          <FontAwesomeIcon icon={faHeart} />
-                        </Link>
+                        {checkIconWishlist(item.id)}
                       </Card.Body>
                     </Card>
                   </Col>
@@ -169,4 +253,4 @@ const PhoneModelByBrand = () => {
   );
 };
 
-export default PhoneModelByBrand;
+export default Home;

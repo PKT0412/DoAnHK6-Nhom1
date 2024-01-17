@@ -36,7 +36,6 @@ namespace API_Server.Controllers
         // GET: api/WishLists/User
         [HttpGet]
         [Route("GetWishListByUser/{userId}")]
-
         public async Task<ActionResult<IEnumerable<WishList>>> GetWishListByUser(string userId)
         {
             var wishlist = await _context.WishLists.Include(c => c.PhoneModel)
@@ -96,12 +95,14 @@ namespace API_Server.Controllers
         [HttpPost]
         public async Task<ActionResult<WishList>> PostWishList(WishList wishList)
         {
-            _context.WishLists.Add(wishList);
-            await _context.SaveChangesAsync();
+            if (!_context.WishLists.Any(w => w.PhoneModelId == wishList.PhoneModelId && w.UserId == wishList.UserId))
+            {
+                _context.WishLists.Add(wishList);
+                await _context.SaveChangesAsync();
+            }
 
             return CreatedAtAction("GetWishList", new { id = wishList.Id }, wishList);
         }
-
         // DELETE: api/WishLists/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWishList(int id)
