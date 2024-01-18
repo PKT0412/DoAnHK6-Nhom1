@@ -17,8 +17,8 @@ namespace API_Server.Models
         [DefaultValue(0)]
         public int Total { get; set;}
 
-        [DefaultValue(true)]
-        public bool Status { get; set; }
+        [DefaultValue(1)]
+        public int Status { get; set; }
 
         public int UserId { get; set; }
 
@@ -32,7 +32,7 @@ namespace API_Server.Models
 
         public Invoice()
         {
-            Status = true;
+            Status = 1;
             Total = 0;
         }
     }

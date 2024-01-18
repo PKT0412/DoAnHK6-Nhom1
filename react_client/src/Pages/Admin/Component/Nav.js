@@ -36,6 +36,12 @@ const Nav = () => {
                     </div>
                     Banner quảng cáo
                   </a>
+                  <a className="nav-link" href="/Admin/Invoice">
+                    <div className="sb-nav-link-icon">
+                      <i className="fas fa-table" />
+                    </div>
+                    Đơn hàng
+                  </a>
                 </div>
               </div>
 

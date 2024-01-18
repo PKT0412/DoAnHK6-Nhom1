@@ -19,10 +19,25 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./Header.css";
 import { ToastContainer, toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 
 const Header = () => {
   const [username, setUsername] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState("");
+
+  // Check token
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const decoded = jwtDecode(token);
+      setRole(
+        decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+      );
+    }
+    console.log("check role", role);
+  }, [role]);
 
   const navigate = useNavigate();
 
@@ -47,6 +62,10 @@ const Header = () => {
     window.location.reload("/");
 
     toast.success("Log out success!");
+  };
+
+  const handleAdmin = () => {
+    navigate("/admin");
   };
 
   return (
@@ -77,14 +96,26 @@ const Header = () => {
                 </Form>
               </Col>
               <Col xs lg="2" className="d-flex justify-content-center">
-                <Link to="/Cart" className="LinkHeader">
-                  <FontAwesomeIcon icon={faShoppingBag} className="icon" />
-                </Link>
+                {isLoggedIn ? (
+                  <Link to="/Cart" className="LinkHeader">
+                    <FontAwesomeIcon icon={faShoppingBag} className="icon" />
+                  </Link>
+                ) : (
+                  <Link to="/login" className="LinkHeader">
+                    <FontAwesomeIcon icon={faShoppingBag} className="icon" />
+                  </Link>
+                )}
               </Col>
               <Col xs lg="1" className="d-flex justify-content-center">
-                <Link to="/Wishlist" className="LinkHeader">
-                  <FontAwesomeIcon icon={faHeart} className="icon" />
-                </Link>
+                {isLoggedIn ? (
+                  <Link to="/Wishlist" className="LinkHeader">
+                    <FontAwesomeIcon icon={faHeart} className="icon" />
+                  </Link>
+                ) : (
+                  <Link to="/login" className="LinkHeader">
+                    <FontAwesomeIcon icon={faHeart} className="icon" />
+                  </Link>
+                )}
               </Col>
               <Col xs lg="2" className="d-flex justify-content-end">
                 {username && (
@@ -92,11 +123,17 @@ const Header = () => {
                     Welcome {username}
                   </span>
                 )}
+
                 {isLoggedIn ? (
                   <DropdownButton
                     id="dropdown-basic-button"
                     title={<FontAwesomeIcon icon={faUser} />}
                   >
+                    {isLoggedIn && role === "Admin" && (
+                      <Dropdown.Item onClick={handleAdmin}>
+                        Trang quản lý
+                      </Dropdown.Item>
+                    )}
                     <Dropdown.Item onClick={handleLogout}>
                       Đăng xuất
                     </Dropdown.Item>
