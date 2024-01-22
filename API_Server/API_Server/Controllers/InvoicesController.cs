@@ -25,7 +25,11 @@ namespace API_Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices()
         {
-            return await _context.Invoices.ToListAsync();
+            return await _context.Invoices
+                                .Include(i => i.User)
+                                .Include(i => i.PaymentMethod)
+                                .Include(i => i.DiscountCode)
+                                .ToListAsync();
         }
 
         // GET: api/Invoices/5
@@ -53,6 +57,68 @@ namespace API_Server.Controllers
             }
 
             _context.Entry(invoice).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!InvoiceExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // PUT: api/Invoices/Cancel/5
+        [HttpPut("Cancel/{id}")]
+        public async Task<IActionResult> CancelInvoice(int id)
+        {
+            var invoice = await _context.Invoices.FindAsync(id);
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            invoice.Status = 5; // Đổi trạng thái thành 5 (đã hủy)
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!InvoiceExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // PUT: api/Invoices/Cancel/5
+        [HttpPut("Process/{id}")]
+        public async Task<IActionResult> ProcessInvoice(int id)
+        {
+            var invoice = await _context.Invoices.FindAsync(id);
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            invoice.Status += 1; 
 
             try
             {

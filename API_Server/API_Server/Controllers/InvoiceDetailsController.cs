@@ -28,6 +28,20 @@ namespace API_Server.Controllers
             return await _context.InvoiceDetails.ToListAsync();
         }
 
+        // GET: api/InvoiceDetails/InvoiceId
+        [HttpGet]
+        [Route("GetInvoiceDetailsByInvoiceId/{invoiceId}")]
+        public async Task<ActionResult<IEnumerable<InvoiceDetail>>> GetInvoiceDetailsByInvoiceId(int invoiceId)
+        {
+            var invoiceDetails = await _context.InvoiceDetails
+                                        .Include(i => i.Phone)
+                                        .Where(i => i.InvoiceId == invoiceId)
+                                        .ToListAsync();
+
+
+            return invoiceDetails;
+        }
+
         // GET: api/InvoiceDetails/5
         [HttpGet("{id}")]
         public async Task<ActionResult<InvoiceDetail>> GetInvoiceDetail(int id)

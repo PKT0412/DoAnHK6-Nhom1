@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API_Server.Models
 {
@@ -20,7 +21,10 @@ namespace API_Server.Models
         [DefaultValue(1)]
         public int Status { get; set; }
 
-        public int UserId { get; set; }
+        [ForeignKey("UserId")]
+        public string UserId { get; set; }
+
+        public User User { get; set; }
 
         public int PaymentMethodId { get; set; }
 
