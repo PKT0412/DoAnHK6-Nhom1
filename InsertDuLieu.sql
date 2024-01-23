@@ -358,3 +358,11 @@ INSERT INTO SlideShows(Image, Status, PhoneModelId) VALUES (N'slider03.png', 1, 
 INSERT INTO SlideShows(Image, Status, PhoneModelId) VALUES (N'slider04.png', 1, 1);
 INSERT INTO SlideShows(Image, Status, PhoneModelId) VALUES (N'slider05.png', 1, 1);
 INSERT INTO SlideShows(Image, Status, PhoneModelId) VALUES (N'slider06.png', 1, 1);
+
+
+INSERT INTO DiscountCodes(Name, Code, StartDay, EndDay, Quantity, [Percent], Status) 
+VALUES (N'Không có', '', '2024-01-20', '2024-05-20', 999999999, 0, 1);
+INSERT INTO DiscountCodes(Name, Code, StartDay, EndDay, Quantity, [Percent], Status) 
+VALUES (N'Giảm 25%', 'MTD25', '2024-01-20', '2024-05-20', 10, 25, 1);
+INSERT INTO DiscountCodes(Name, Code, StartDay, EndDay, Quantity, [Percent], Status) 
+VALUES (N'Giảm 50%', 'MTD50', '2024-01-20', '2024-05-20', 10, 50, 1);

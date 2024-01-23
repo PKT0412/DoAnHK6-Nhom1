@@ -40,6 +40,12 @@ const Nav = () => {
               </div>
               Đơn hàng
             </a>
+            <a className="nav-link" href="/Admin/DiscountCode">
+              <div className="sb-nav-link-icon">
+                <i className="fas fa-table" />
+              </div>
+              Mã giảm giá
+            </a>           
           </div>
         </div>
 

@@ -10,7 +10,7 @@ namespace API_Server.Models
 
         public string Code { get; set; }
 
-        public DateTime StarDay { get; set; }
+        public DateTime StartDay { get; set; }
 
         public DateTime EndDay { get; set; }
 
