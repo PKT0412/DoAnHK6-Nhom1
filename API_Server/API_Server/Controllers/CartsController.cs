@@ -114,6 +114,24 @@ namespace API_Server.Controllers
 
             return NoContent();
         }
+        // DELETE: api/Carts
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCart()
+        {
+            // Lấy toàn bộ danh sách giỏ hàng
+            var carts = await _context.Carts.ToListAsync();
+
+            if (carts == null || carts.Count == 0)
+            {
+                return NotFound();
+            }
+
+            // Xóa toàn bộ danh sách giỏ hàng
+            _context.Carts.RemoveRange(carts);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
 
         private bool CartExists(int id)
         {
