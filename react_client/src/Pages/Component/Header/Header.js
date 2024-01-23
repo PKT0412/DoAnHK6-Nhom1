@@ -7,6 +7,7 @@ import {
   Col,
   DropdownButton,
   Dropdown,
+  Image,
 } from "react-bootstrap";
 import { Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,11 +21,17 @@ import {
 import "./Header.css";
 import { ToastContainer, toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+import axiosClient from "../axiosClient";
 
 const Header = () => {
   const [username, setUsername] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState("");
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSeachResuls] = useState([]);
+  const [searchMessage, setSearchMessage] = useState("");
+  // const searchInputRef = useRef(null);
 
   // Check token
   useEffect(() => {
@@ -68,6 +75,46 @@ const Header = () => {
     navigate("/admin");
   };
 
+  const handleInputChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+    // Kiểm tra giá trị tìm kiếm có rỗng hay không
+    if (query === "") {
+      setSeachResuls([]);
+      setSearchMessage("");
+    } else {
+      // Gửi yêu cầu tìm kiếm khi người dùng gõ chữ
+      searchProduct(query);
+    }
+  };
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    const encodedQuery = encodeURIComponent(searchQuery);
+    window.location.href = `/search?query=${encodedQuery}`;
+  };
+
+  const searchProduct = (query) => {
+    axiosClient
+      .get(`https://localhost:7217/api/PhoneModels?search=${query}`)
+      .then((res) => {
+        const phonemodels = res.data;
+
+        const filteredPhoneModels = phonemodels.filter((phonemodel) =>
+          phonemodel.name.toLowerCase().includes(query.toLowerCase())
+        );
+        if (filteredPhoneModels.length > 0) {
+          setSeachResuls(filteredPhoneModels);
+          setSearchMessage("");
+        } else {
+          setSeachResuls([]);
+          setSearchMessage("Không tìm thấy sản phẩm.");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <>
       <div className="header">
@@ -84,17 +131,50 @@ const Header = () => {
                 </Navbar.Brand>
               </Col>
               <Col xs lg="3">
-                <Form className="d-flex">
+                <Form className="d-flex" onSubmit={handleSearchSubmit}>
                   <Form.Control
                     type="text"
                     placeholder="Search"
                     className="mr-sm-2"
+                    id="search-inp"
+                    value={searchQuery}
+                    onChange={handleInputChange}
                   />
-                  <Button type="submit" variant="secondary">
-                    <FontAwesomeIcon icon={faSearch} />
-                  </Button>
+                  <Link to={`/search?query=${encodeURIComponent(searchQuery)}`}>
+                    {" "}
+                    <Button
+                      type="submit"
+                      variant="secondary"
+                      id="button-addon2"
+                      onSubmit={handleSearchSubmit}
+                    >
+                      <FontAwesomeIcon icon={faSearch} />
+                    </Button>
+                  </Link>
                 </Form>
               </Col>
+              {searchMessage && (
+                <p style={{ marginBottom: "10px", display: "flex" }}>
+                  {searchMessage}
+                </p>
+              )}
+              {searchResults.length > 0 && (
+                <div className="search-result">
+                  {searchResults.map((item) => (
+                    <Link to={`/PhoneDetail/:id/${item.id}`}>
+                      <Image
+                        src={`https://localhost:7217/Image/PhoneModel/${item.image}`}
+                        style={{ width: "100px" }}
+                        alt="Hình"
+                      />
+                      <div className="info">
+                        <div className="name">{item.name}</div>
+                        <div className="price">{item.oldPrice}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
               <Col xs lg="2" className="d-flex justify-content-center">
                 {isLoggedIn ? (
                   <Link to="/Cart" className="LinkHeader">
