@@ -359,6 +359,10 @@ INSERT INTO SlideShows(Image, Status, PhoneModelId) VALUES (N'slider04.png', 1, 
 INSERT INTO SlideShows(Image, Status, PhoneModelId) VALUES (N'slider05.png', 1, 1);
 INSERT INTO SlideShows(Image, Status, PhoneModelId) VALUES (N'slider06.png', 1, 1);
 
-INSERT INTO AspNetUsers(Id,FullName,Gender,BirthDay,Address,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount)
-VALUES ('2d38b04b-ff04-4368-a5bd-5a9e9949caf9',	'Admin',	'male',	'2024-01-10 00:00:00.0000000',	N'57 Ngô Văn Sở, Thị xã Dĩ An, Dĩ An, Bình Dương',	'Admin',	'ADMIN',	'pltd@gmail.com',	'PLTD@GMAIL.COM',	0,'AQAAAAEAACcQAAAAECNA73x7osJOW2SNx9tPQCkG6m3ZGgDf0AYYGALl2hf/zXOm0n4ALr+YJcKm5/UIWQ==','ENPLZKAXR3Q7QYT6RBQ35ZMNOTLKR6VQ',	'6206b64e-1678-4fdb-aa44-4a80c9368b60',	NULL,0,0,NULL,	1,	0);
 
+INSERT INTO DiscountCodes(Name, Code, StartDay, EndDay, Quantity, [Percent], Status) 
+VALUES (N'Không có', '', '2024-01-20', '2024-05-20', 999999999, 0, 1);
+INSERT INTO DiscountCodes(Name, Code, StartDay, EndDay, Quantity, [Percent], Status) 
+VALUES (N'Giảm 25%', 'MTD25', '2024-01-20', '2024-05-20', 10, 25, 1);
+INSERT INTO DiscountCodes(Name, Code, StartDay, EndDay, Quantity, [Percent], Status) 
+VALUES (N'Giảm 50%', 'MTD50', '2024-01-20', '2024-05-20', 10, 50, 1);

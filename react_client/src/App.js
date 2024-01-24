@@ -26,6 +26,9 @@ import SlideShowAdd from "./Pages/Admin/SlideShowAdd";
 import SlideShowEdit from "./Pages/Admin/SlideShowEdit";
 import PrivateRoute from "./Routes/PrivateRoute";
 import InvoiceList from "./Pages/Admin/InvoiceList";
+import DiscountCodeList from "./Pages/Admin/DiscountCodeList";
+import DiscountCodeAdd from "./Pages/Admin/DiscountCodeAdd";
+import DiscountCodeEdit from "./Pages/Admin/DiscountCodeEdit";
 
 const App = () => {
   return (
@@ -170,6 +173,30 @@ const App = () => {
             element={
               <PrivateRoute>
                 <SlideShowEdit />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/Admin/DiscountCode"
+            element={
+              <PrivateRoute>
+                <DiscountCodeList />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/Admin/DiscountCode/Add"
+            element={
+              <PrivateRoute>
+                <DiscountCodeAdd />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/Admin/DiscountCode/Edit/:id"
+            element={
+              <PrivateRoute>
+                <DiscountCodeEdit />
               </PrivateRoute>
             }
           />
