@@ -59,16 +59,19 @@ const Header = () => {
   const handleLogout = (e) => {
     // Cập nhật trạng thái đăng nhập
     setIsLoggedIn(false);
-
+  
     // Xóa token khỏi localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     setUsername(null);
-
-    // Reload lại trang web
-    window.location.reload("/");
-
+  
+    // Hiển thị thông báo đăng xuất thành công
     toast.success("Log out success!");
+  
+    // Load lại trang web sau 0.5 giây và chuyển về trang chủ
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 500);
   };
 
   const handleAdmin = () => {

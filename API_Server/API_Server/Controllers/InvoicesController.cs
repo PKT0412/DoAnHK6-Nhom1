@@ -147,8 +147,48 @@ namespace API_Server.Controllers
             _context.Invoices.Add(invoice);
             await _context.SaveChangesAsync();
 
+            if (invoice.Id == 0)
+            {
+                // Xử lý lỗi khi không lưu được Invoice vào cơ sở dữ liệu
+                // Ví dụ: Ghi log, thông báo lỗi, hoặc trả về lỗi HTTP
+                return BadRequest("Failed to save the invoice"); // Hoặc mã lỗi HTTP phù hợp
+            }
+
+            // Lấy danh sách các sản phẩm trong giỏ hàng
+            var cartItems = _context.Carts.Where(c => c.UserId == invoice.UserId).ToList();
+
+            // Tạo InvoiceDetail cho mỗi sản phẩm trong giỏ hàng
+            foreach (var cartItem in cartItems)
+            {
+                var phone = _context.Phones.FirstOrDefault(p => p.Id == cartItem.PhoneId);
+
+                if (phone != null)
+                {
+                    var invoiceDetail = new InvoiceDetail
+                    {
+                        InvoiceId = invoice.Id,
+                        PhoneId = phone.Id,
+                        Quantity = cartItem.Quantity,
+                        UnitPrice = phone.Price,
+                        // Các thuộc tính khác của InvoiceDetail
+                    };
+                    _context.InvoiceDetails.Add(invoiceDetail);
+                }
+                else
+                {
+                    // Xử lý ngoại lệ hoặc bỏ qua sản phẩm không tìm thấy
+                    // Ví dụ: Ghi log, thông báo lỗi, hoặc tiếp tục vòng lặp
+                }
+            }
+
+            // Xóa giỏ hàng sau khi đã tạo InvoiceDetails
+            _context.Carts.RemoveRange(cartItems);
+
+            await _context.SaveChangesAsync();
+
             return CreatedAtAction("GetInvoice", new { id = invoice.Id }, invoice);
         }
+
 
         // DELETE: api/Invoices/5
         [HttpDelete("{id}")]
@@ -165,6 +205,8 @@ namespace API_Server.Controllers
 
             return NoContent();
         }
+
+
 
         private bool InvoiceExists(int id)
         {

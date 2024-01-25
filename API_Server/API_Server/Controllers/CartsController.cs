@@ -35,11 +35,8 @@ namespace API_Server.Controllers
         [Route("GetCartByUser/{userId}")]
         public async Task<ActionResult<IEnumerable<Cart>>> GetCartsByUserId(string userId)
         {
-            var carts = await _context.Carts
-        .Include(c => c.Phone)
-            .ThenInclude(p => p.PhoneModel)
-        .Where(c => c.UserId == userId)
-        .ToListAsync();
+            var carts = await _context.Carts.Include(c => c.Phone)
+            .ThenInclude(p => p.PhoneModel).Where(c => c.UserId == userId).ToListAsync();
             return carts;
         }
 
@@ -115,23 +112,27 @@ namespace API_Server.Controllers
             return NoContent();
         }
         // DELETE: api/Carts
-        [HttpDelete]
-        public async Task<IActionResult> DeleteCart()
+        [HttpDelete("GetCartByUser/{userId}")]
+        public async Task<IActionResult> DeleteCartByUserId(string userId)
         {
-            // Lấy toàn bộ danh sách giỏ hàng
-            var carts = await _context.Carts.ToListAsync();
+            // Lấy danh sách giỏ hàng dựa trên UserID
+            var carts = await _context.Carts
+                .Where(c => c.UserId == userId)
+                .ToListAsync();
 
             if (carts == null || carts.Count == 0)
             {
                 return NotFound();
             }
 
-            // Xóa toàn bộ danh sách giỏ hàng
+            // Xóa danh sách giỏ hàng
             _context.Carts.RemoveRange(carts);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
+
+
 
         private bool CartExists(int id)
         {

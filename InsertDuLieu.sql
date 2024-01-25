@@ -366,3 +366,13 @@ INSERT INTO DiscountCodes(Name, Code, StartDay, EndDay, Quantity, [Percent], Sta
 VALUES (N'Giảm 25%', 'MTD25', '2024-01-20', '2024-05-20', 10, 25, 1);
 INSERT INTO DiscountCodes(Name, Code, StartDay, EndDay, Quantity, [Percent], Status) 
 VALUES (N'Giảm 50%', 'MTD50', '2024-01-20', '2024-05-20', 10, 50, 1);
+
+INSERT INTO Invoices(Code,IssuedDate,ShippingAddress,ShippingPhone,Total,Status,UserId,PaymentMethodId,DiscountCodeId)
+values ('ABCDE','2024-01-24',N'57 Ngô Văn Sở, Thị xã Dĩ An, Dĩ An, Bình Dương ','0987165217',61980000 ,1,'548d7f72-5060-4d52-8f17-1281f12f130b',1,1);
+
+INSERT INTO InvoiceDetails(Quantity,UnitPrice,Status,InvoiceId,PhoneId)
+values (1,37990000,1,1,65)
+
+INSERT INTO InvoiceDetails(Quantity,UnitPrice,Status,InvoiceId,PhoneId)
+values (1,23990000,1,1,50)
+
