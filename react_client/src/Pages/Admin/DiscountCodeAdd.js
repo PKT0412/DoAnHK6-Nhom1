@@ -70,23 +70,7 @@ const DiscountCodeAdd = () => {
                     name="code"
                     onChange={handleChange}
                   />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>StartDay</Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="startDay"
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>EndDay</Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="endDay"
-                    onChange={handleChange}
-                  />
-                </Form.Group>
+                </Form.Group>               
                 <Form.Group className="mb-3">
                   <Form.Label>Quantity</Form.Label>
                   <Form.Control

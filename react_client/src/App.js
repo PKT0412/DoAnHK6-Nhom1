@@ -29,6 +29,7 @@ import InvoiceList from "./Pages/Admin/InvoiceList";
 import DiscountCodeList from "./Pages/Admin/DiscountCodeList";
 import DiscountCodeAdd from "./Pages/Admin/DiscountCodeAdd";
 import DiscountCodeEdit from "./Pages/Admin/DiscountCodeEdit";
+import Order from "./Pages/User/Order";
 
 const App = () => {
   return (
@@ -47,6 +48,8 @@ const App = () => {
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/Wishlist" element={<Wishlist />} />
+          <Route path="/Order" element={<Order />} />
+
 
           <Route
             path="/Admin"
