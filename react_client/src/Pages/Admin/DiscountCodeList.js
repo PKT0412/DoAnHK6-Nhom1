@@ -69,8 +69,6 @@ const DiscountCodeList = () => {
                         <th>Id</th>
                         <th>Name</th>
                         <th>Code</th>
-                        <th>StartDay</th>
-                        <th>EndDay</th>
                         <th>Quantity</th>
                         <th>Percent</th>
                         <th>Status</th>
@@ -82,9 +80,7 @@ const DiscountCodeList = () => {
                         <tr>
                           <td>{item.id}</td>                         
                           <td>{item.name}</td>
-                          <td>{item.code}</td>                         
-                          <td>{item.startDay}</td>
-                          <td>{item.endDay}</td>                         
+                          <td>{item.code}</td>                                                 
                           <td>{item.quantity}</td>
                           <td>{item.percent}%</td>
                           <td>

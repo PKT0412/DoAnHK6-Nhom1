@@ -10,10 +10,6 @@ namespace API_Server.Models
 
         public string Code { get; set; }
 
-        public DateTime StartDay { get; set; }
-
-        public DateTime EndDay { get; set; }
-
         [DefaultValue(0)]
         public int Quantity { get; set; }
 

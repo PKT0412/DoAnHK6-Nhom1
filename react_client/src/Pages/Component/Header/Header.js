@@ -75,6 +75,10 @@ const Header = () => {
     navigate("/admin");
   };
 
+  const handleOrder = () => {
+    navigate("/Order");
+  };
+
   const handleInputChange = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
@@ -264,6 +268,9 @@ const Header = () => {
                         Trang quản lý
                       </Dropdown.Item>
                     )}
+                    <Dropdown.Item onClick={handleOrder}>
+                      Quản lý đơn hàng
+                    </Dropdown.Item>
                     <Dropdown.Item onClick={handleLogout}>
                       Đăng xuất
                     </Dropdown.Item>

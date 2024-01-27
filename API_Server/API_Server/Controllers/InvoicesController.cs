@@ -32,6 +32,19 @@ namespace API_Server.Controllers
                                 .ToListAsync();
         }
 
+        // GET: api/Invoices/User
+        [HttpGet]
+        [Route("GetInvoiceByUser/{userId}")]
+        public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoiceByUser(string userId)
+        {
+            var invoice = await _context.Invoices
+                                        .Include(i => i.User)
+                                        .Include(i => i.PaymentMethod)
+                                        .Include(i => i.DiscountCode)
+                                        .Where(c => c.UserId == userId).ToListAsync();
+            return invoice;
+        }
+
         // GET: api/Invoices/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Invoice>> GetInvoice(int id)
@@ -173,6 +186,9 @@ namespace API_Server.Controllers
                         // Các thuộc tính khác của InvoiceDetail
                     };
                     _context.InvoiceDetails.Add(invoiceDetail);
+
+                    // Trừ số lượng sản phẩm trong bảng Phone
+                    phone.Stock -= cartItem.Quantity;
                 }
                 else
                 {
