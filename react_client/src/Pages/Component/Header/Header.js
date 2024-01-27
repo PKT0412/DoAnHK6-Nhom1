@@ -59,19 +59,16 @@ const Header = () => {
   const handleLogout = (e) => {
     // Cập nhật trạng thái đăng nhập
     setIsLoggedIn(false);
-  
+
     // Xóa token khỏi localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     setUsername(null);
-  
-    // Hiển thị thông báo đăng xuất thành công
+
+    // Reload lại trang web
+    window.location.reload("/");
+
     toast.success("Log out success!");
-  
-    // Load lại trang web sau 0.5 giây và chuyển về trang chủ
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 500);
   };
 
   const handleAdmin = () => {
@@ -133,51 +130,101 @@ const Header = () => {
                   ></img>
                 </Navbar.Brand>
               </Col>
-              <Col xs lg="3">
-                <Form className="d-flex" onSubmit={handleSearchSubmit}>
-                  <Form.Control
-                    type="text"
-                    placeholder="Search"
-                    className="mr-sm-2"
-                    id="search-inp"
-                    value={searchQuery}
-                    onChange={handleInputChange}
-                  />
-                  <Link to={`/search?query=${encodeURIComponent(searchQuery)}`}>
-                    {" "}
-                    <Button
-                      type="submit"
-                      variant="secondary"
-                      id="button-addon2"
-                      onSubmit={handleSearchSubmit}
+              <div className="container" style={{ position: "relative" }}>
+                <div className="search">
+                  <Form onSubmit={handleSearchSubmit}>
+                    <input
+                      type="text"
+                      className="header-search-input"
+                      placeholder="Tìm kiếm tại đây..."
+                      value={searchQuery}
+                      onChange={handleInputChange}
+                      style={{ borderRadius: "10px", padding: "8px" }}
+                    />
+                    <Link
+                      to={`/search?query=${encodeURIComponent(searchQuery)}`}
                     >
-                      <FontAwesomeIcon icon={faSearch} />
-                    </Button>
-                  </Link>
-                </Form>
-              </Col>
-              {searchMessage && (
-                <p style={{ marginBottom: "10px", display: "flex" }}>
-                  {searchMessage}
-                </p>
-              )}
-              {searchResults.length > 0 && (
-                <div className="search-result">
-                  {searchResults.map((item) => (
-                    <Link to={`/PhoneDetail/:id/${item.id}`}>
-                      <Image
-                        src={`https://localhost:7217/Image/PhoneModel/${item.image}`}
-                        style={{ width: "100px" }}
-                        alt="Hình"
-                      />
-                      <div className="info">
-                        <div className="name">{item.name}</div>
-                        <div className="price">{item.oldPrice}</div>
-                      </div>
+                      <Button
+                        type="submit"
+                        variant="secondary"
+                        id="button-addon2"
+                        onSubmit={handleSearchSubmit}
+                      >
+                        <FontAwesomeIcon icon={faSearch} />
+                      </Button>
                     </Link>
-                  ))}
+                  </Form>
                 </div>
-              )}
+                {searchMessage && (
+                  <p
+                    style={{
+                      display: "flex",
+                      width: "90%",
+                      height: "50px",
+                      padding: "10px 10px",
+                      backgroundColor: "#fff",
+                      color: "#000",
+                      fontSize: "14px",
+                      position: "absolute",
+                      justifyContent: "center",
+                      maxWidth: "413px",
+                    }}
+                  >
+                    {searchMessage}
+                  </p>
+                )}
+                {searchResults.length > 0 && (
+                  <div
+                    className="search-result"
+                    style={{
+                      position: "absolute",
+                      zIndex: 9999,
+                      maxHeight: "240px",
+                      overflow: "hidden",
+                      backgroundColor: "#fff",
+                      maxWidth: "413px",
+                      margin: "auto",
+                    }}
+                  >
+                    {searchResults.map((item) => (
+                      <Link
+                        to={`/PhoneDetail/:id/${item.id}`}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <div
+                          className="product"
+                          style={{
+                            display: "flex",
+                            width: "100%",
+                            height: "120px",
+                            padding: "10px 20px",
+                            backgroundColor: "#fff",
+                            cursor: "pointer",
+                            color: "#000",
+                            marginBottom: "25px",
+                          }}
+                        >
+                          <Image
+                            src={`https://localhost:7217/api/PhoneModels/${item.image}`}
+                            style={{ width: "100px", marginLeft: "10px" }}
+                            alt="Hình"
+                            s
+                          />
+                          <div className="info" style={{ cursor: "pointer" }}>
+                            <div className="name">{item.name}</div>
+                            <div
+                              className="price"
+                              style={{ marginTop: "1rem" }}
+                            >
+                              {item.oldPrice}
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
               <Col xs lg="2" className="d-flex justify-content-center">
                 {isLoggedIn ? (
                   <Link to="/Cart" className="LinkHeader">
