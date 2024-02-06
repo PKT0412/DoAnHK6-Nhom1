@@ -43,7 +43,6 @@ const Cart = () => {
     setIsUpdating(true);
 
     // Cập nhật giỏ hàng
-
     setTimeout(() => {
       setIsUpdating(false);
       window.location.reload();
@@ -206,7 +205,7 @@ const Cart = () => {
 
   const handleDelete = (id) => {
     const shouldDelete = window.confirm(
-      "Bạn có chắc chắn muốn xóa sản phẩm yêu thích này?"
+      "Bạn có chắc chắn muốn xóa sản phẩm khỏi giỏ hàng?"
     );
     if (shouldDelete) {
       axiosClient
